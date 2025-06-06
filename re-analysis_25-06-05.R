@@ -28,28 +28,20 @@ compute_cor_coef <- function(mat) {
 ### B. Compute nodf p-value ----
 compute_p_val_nodf <- function(mat, b) {
   tryCatch({
-    if(nrow(mat) > 1 && ncol(mat) > 1) {
-      out_nodf <- oecosimu(comm = mat, nestfun = nestednodf, 
+    out_nodf <- oecosimu(comm = mat, nestfun = nestednodf, 
                            method = b, alt = "greater", nsimul = 1000,
                            batchsize = 50, parallel = TRUE)
-      out_nodf$oecosimu$pval[3]
-    } else {
-      NA_real_
-    }
+    out_nodf$oecosimu$pval[3]
   }, error = function(e) NA_real_)
 }
 
 ### ---- C. Compute temp p-value ----
 compute_p_val_temp <- function(mat, b) {
   tryCatch({
-    if(nrow(mat) > 1 && ncol(mat) > 1) {
-      out_temp <- oecosimu(comm = mat, nestfun = nestedtemp, 
+    out_temp <- oecosimu(comm = mat, nestfun = nestedtemp, 
                            method = b, alt = "less", nsimul = 1000,
                            batchsize = 50, parallel = TRUE)
-      out_temp$oecosimu$pval
-    } else {
-      NA_real_
-    }
+    out_temp$oecosimu$pval
   }, error = function(e) NA_real_)
 }
 
@@ -63,7 +55,7 @@ compute_p_val_temp <- function(mat, b) {
 
 ### ---- A. Parameters lists ----
 metrics <- c('NODF', 'Temp')
-baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'backtracking',
-               'swap', 'tswap','quasiswap', 'greedyqswap')
+baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap', 
+               'tswap','quasiswap', 'greedyqswap','backtracking')
 
 
