@@ -8,7 +8,7 @@ library(vegan)
 library(permute)
 library(lattice)
 
-options(mc.cores = max(2, parallel::detectCores() - 2))
+options(mc.cores = max(1, parallel::detectCores() - 1))
 
 
 ## ==== 2. Functions ====
@@ -62,7 +62,7 @@ compute_p_val_temp <- function(mat, b) {
 ## ==== 4. Nestedness analysis ====
 
 ### ---- A. Parameters lists ----
-metrics <- c('r0', 'r1', 'curveball')
+metrics <- c('NODF', 'Temp')
 baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'backtracking',
                'swap', 'tswap','quasiswap', 'greedyqswap')
 
