@@ -8,7 +8,7 @@ library(vegan)
 library(permute)
 library(lattice)
 
-options(mc.cores = max(2, parallel::detectCores() - 2))
+options(mc.cores = max(1, parallel::detectCores() - 1))
 
 
 ## ==== 2. Functions ====
