@@ -62,7 +62,7 @@ compute_p_val_temp <- function(mat, b) {
 ## ==== 4. Nestedness analysis ====
 
 ### ---- A. Parameters lists ----
-metrics <- c('r0', 'r1', 'curveball')
+metrics <- c('NODF', 'Temp')
 baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'backtracking',
                'swap', 'tswap','quasiswap', 'greedyqswap')
 
