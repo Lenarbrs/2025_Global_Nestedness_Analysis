@@ -1,6 +1,6 @@
 Data recuperation :
 - récupérer MovieLens (OK)
-- récupérer Archéologie datasets
+- récupérer Archéologie datasets (OK)
 
 Data cleaning : 
 - run codes d'Edgar pour trivia
