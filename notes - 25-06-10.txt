@@ -3,7 +3,7 @@ Data recuperation :
 - récupérer Archéologie datasets (OK)
 
 Data cleaning : 
-- run codes d'Edgar pour trivia
+- run codes d'Edgar pour trivia (OK)
 - collapse dfs d'archéologie
 - passer Kamilar & Atkinson en csv (OK)
 - run code shortlist
