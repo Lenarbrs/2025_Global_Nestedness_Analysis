@@ -13,3 +13,10 @@ Code structure :
 - check toutes les fonctions
 - récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice
 
+Comparaison :
+- lire article
+- faire une synthèse des résultats (et méthodes)
+
+Other :
+- pre-registration
+
