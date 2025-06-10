@@ -1,11 +1,12 @@
 Data recuperation :
-- récupérer MovieLens
+- récupérer MovieLens (OK)
 - récupérer Archéologie datasets
 
 Data cleaning : 
 - run codes d'Edgar pour trivia
 - collapse dfs d'archéologie
 - passer Kamilar & Atkinson en csv (excel ?)
+- run code shortlist
 
 Code structure :
 - passer en fonction
