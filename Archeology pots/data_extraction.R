@@ -1,10 +1,9 @@
-# ======== Archeology pots dataset - data extraction ========
+# ======== Archeology pots dataset ========
 
 ## 1. Loading data ====
 library(folio)
 
 ## 2. Save datasets to csv ====
-
 df_boves <- boves
 write.csv(df_boves, "boves.csv", row.names = FALSE)
 
