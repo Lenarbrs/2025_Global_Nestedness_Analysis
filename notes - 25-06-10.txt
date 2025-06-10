@@ -12,10 +12,10 @@ Data cleaning :
 Code structure :
 - passer en fonction
 - check toutes les fonctions
-- récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice
+- récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
 
 Comparaison :
-- lire article
+- lire articles
 - faire une synthèse des résultats (et méthodes)
 
 Other :
