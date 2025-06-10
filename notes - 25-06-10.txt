@@ -5,7 +5,7 @@ Data recuperation :
 Data cleaning : 
 - run codes d'Edgar pour trivia
 - collapse dfs d'archéologie
-- passer Kamilar & Atkinson en csv (excel ?)
+- passer Kamilar & Atkinson en csv (OK)
 - run code shortlist
 
 Code structure :
