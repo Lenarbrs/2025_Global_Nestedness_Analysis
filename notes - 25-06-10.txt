@@ -7,6 +7,7 @@ Data cleaning :
 - collapse dfs d'archéologie
 - passer Kamilar & Atkinson en csv (OK)
 - run code shortlist
+- phoible
 
 Code structure :
 - passer en fonction
@@ -24,7 +25,3 @@ Matrice clean et ok pour analyse :
 - plant knowledge
 - Chimpanzee
 - Trivia
-
-Matrice clean à faire :
-- phoible
-- shortlist effect
