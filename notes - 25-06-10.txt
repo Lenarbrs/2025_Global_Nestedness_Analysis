@@ -15,11 +15,12 @@ Code structure :
 - récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
 
 Comparaison :
-- lire articles
-- faire une synthèse des résultats (et méthodes)
+- lire articles (en cours)
+- faire une synthèse des résultats (et méthodes) (en cours)
 
 Other :
 - pre-registration
+- faire read me
 
 Matrice clean et ok pour analyse :
 - plant knowledge
