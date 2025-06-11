@@ -4,10 +4,10 @@ Data recuperation :
 
 Data cleaning : 
 - run codes d'Edgar pour trivia (OK)
-- collapse dfs d'archéologie
+- collapse dfs d'archéologie + binarize (OK)
 - passer Kamilar & Atkinson en csv (OK)
 - run code shortlist
-- phoible
+- extraire clean phoible
 
 Code structure :
 - passer en fonction

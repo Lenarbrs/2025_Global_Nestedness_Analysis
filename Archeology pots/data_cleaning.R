@@ -4,9 +4,12 @@
 library(dplyr)
 library(readr)
 
+
 ## 2. data import ====
 df_loire <- read_csv("loire.csv")
 df_chevelon <- read_csv("chevelon.csv")
+df_merzback <- read_csv("merzback.csv")
+
 
 ## 3. LOIRE data cleaning ====
 # Identify ceramic columns (all columns from index 5 onwards)
@@ -33,9 +36,13 @@ loire_area <- df_loire %>%
   ungroup()
 write.csv(loire_area, "loire_area.csv", row.names = FALSE)
 
+
 ## 4. CHEVELON data cleaning ====
+chevelon_binarized <- ifelse(df_chevelon != 0, 1, 0)
+write.csv(chevelon_binarized, "chevelon_bin.csv", row.names = FALSE)
 
 
 ## 5. MERZBACK data cleaning ====
-
+merzback_binarized <- ifelse(df_merzback != 0, 1, 0)
+write.csv(merzback_binarized, "merzback_bin.csv", row.names = FALSE)
 
