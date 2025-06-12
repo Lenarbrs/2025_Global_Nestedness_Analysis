@@ -13,10 +13,14 @@ In total: 91 matrices
 
 ## Global Dataset Structure:
 
+Metric: NODF
+Baselines: r00, r0, r1, r2, c0, c1, curveball, swap
+
 Output csv: 
 - 1 csv per matrix
 - 7,007 rows (7 baselines * 1,000 simulations + 7 real rows * 7 baselines)
 - 9 columns
+- c1 in another csv
 
 Structure:
 
