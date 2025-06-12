@@ -48,7 +48,6 @@ compute_p_val_temp <- function(mat, b) {
 
 ## ==== 3. Data import ====
 
-# coucou léna
 
 
 ## ==== 4. Nestedness analysis ====
