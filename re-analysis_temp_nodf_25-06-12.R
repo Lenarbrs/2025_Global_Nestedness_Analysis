@@ -34,11 +34,21 @@ compute_p_val_nodf <- function(mat, b, n_iter) {
   }, error = function(e) NA_real_)
 }
 
+### ---- C. Compute temp p-value ----
+compute_p_val_temp <- function(mat, b, n_iter) {
+  tryCatch({
+    out_temp <- oecosimu(comm = mat, nestfun = nestedtemp, 
+                         method = b, alt = "less", nsimul = n_iter,
+                         batchsize = 50, parallel = TRUE)
+    out_temp$oecosimu$pval
+  }, error = function(e) NA_real_)
+}
 
 ## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, n_iter) {
   
   ### ---- A. Parameters list ----
+  metrics <- c('NODF', 'Temp')
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap')
   
   ### ---- B. Initialize empty dataframe ----
@@ -50,8 +60,10 @@ nestedness_analysis <- function(matrix, matrix_id, n_iter) {
   )
   # Add baseline/metric-specific columns
   for (b in baselines) {
-    df_cols[[paste0("p_value_", b)]] <- numeric()
-    df_cols[[paste0("nestedness_value_", b)]] <- numeric()
+    for (m in metrics) {
+      df_cols[[paste0("p_value_", b, "_", m)]] <- numeric()
+      df_cols[[paste0("nestedness_score_", b, "_", m)]] <- numeric()
+    }
   }
   df_nestedness <- do.call(data.frame, c(df_cols, stringsAsFactors = FALSE))
   
@@ -71,8 +83,12 @@ nestedness_analysis <- function(matrix, matrix_id, n_iter) {
   for (b in baselines){
     ### ---- E. Compute nestedness ----
     p_val_nodf <- compute_p_val_nodf(matrix, b, n_iter)
-    new_row[[paste0("p_value_", b)]] <- p_val_nodf$oecosimu$pval[3]
-    new_row[[paste0("nestedness_value_", b)]]<- HSHSJ
+    new_row[[paste0("p_value_", b, "_NODF")]] <- p_val_nodf$oecosimu$pval[3]
+    new_row[[paste0("nestedness_score_", b, "_NODF")]]<- HSHSJIDHDJD
+    
+    p_val_temp <- compute_p_val_temp(matrix, b, n_iter)
+    new_row[[paste0("p_value_", b, "_Temp")]] <- p_val_temp$oecosimu$pval
+    new_row[[paste0("nestedness_score_", b, "_Temp")]]<- HSHSJIDHDJD
   }
   
   ### ---- F. Save results ----
