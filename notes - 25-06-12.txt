@@ -6,12 +6,13 @@ Data cleaning :
 - run codes d'Edgar pour trivia (OK)
 - collapse dfs d'archéologie + binarize (OK)
 - passer Kamilar & Atkinson en csv (OK)
-- run code shortlist
+- run code shortlist (en cours)
 
 Code structure :
 - passer en fonction
-- check toutes les fonctions
+- check toutes les fonctions (OK)
 - récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
+- récupérer nestedness value et toutes matrices simulées
 
 Comparaison :
 - lire articles (en cours)
@@ -21,6 +22,7 @@ Other :
 - pre-registration
 - faire read me
 
+Where we at
 Matrice clean et ok pour analyse :
 - plant knowledge
 - Chimpanzee
