@@ -1,6 +1,6 @@
 # Global_Nestedness_Analysis
 
-## Datasets:
+## Original Datasets:
 
 - Archeology pots: 5 matrices
 - Kamilar, Atkinson - chimpanzees orangutans: 10 matrices
@@ -10,3 +10,14 @@
 - Morin, Shobchuk - the shorlist effect: TBA
 
 In total: 91 matrices
+
+## Global Dataset Structure:
+
+Output csv: 
+- 1 csv per matrix
+- 7,007 rows (7 baselines * 1,000 simulations + 7 real rows * 7 baselines)
+- 9 columns
+
+Structure:
+
+Matrix_ID | n_rows | n_columns | coefcor | (Mesure?) (Nodf/Temp) | Baseline | Type (simulated / Real) | nestedness_value (all of them) | p_value 
