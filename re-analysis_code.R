@@ -54,8 +54,7 @@ compute_p_val_temp <- function(mat, b) {
 ## ==== 4. Nestedness analysis ====
 
 ### ---- A. Parameters lists ----
-metrics <- c('NODF', 'Temp')
-baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap', 
-               'tswap','quasiswap', 'greedyqswap','backtracking')
+metrics <- c('NODF', 'Temp') # Pour l'instant que NODF
+baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball','swap','backtracking')
 
-
+# Rajouter c1 en inversant la matrice + faire r1
