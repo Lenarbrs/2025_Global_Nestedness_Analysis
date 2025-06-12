@@ -21,6 +21,7 @@ Comparaison :
 Other :
 - pre-registration
 - faire read me
+- mettre données dans un seul dossier
 
 Where we at
 Matrice clean et ok pour analyse :
