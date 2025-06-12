@@ -40,6 +40,7 @@ nestedness_analysis <- function(matrix, matrix_id, n_iter) {
   
   ### ---- A. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap')
+  # add c1, inverse matrix then r1
   
   ### ---- B. Initialize empty dataframe ----
   df_cols <- list(
