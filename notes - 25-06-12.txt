@@ -7,6 +7,7 @@ Data cleaning :
 - collapse dfs d'archéologie + binarize (OK)
 - passer Kamilar & Atkinson en csv (OK)
 - run code shortlist (en cours)
+- clean les lignes colonnes de phoible
 
 Code structure :
 - passer en fonction
