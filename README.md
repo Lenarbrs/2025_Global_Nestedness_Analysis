@@ -7,9 +7,9 @@
 - Koshevoy, Rebours - phoible: 71 matrices (70 families + 1 global matrix)
 - Dubourg, Morin - trivia: 4 matrices (3 themes and 1 global matrix)
 - Salali et al. - BaYaka plant knowledge: 1 matrix
-- Morin, Shobchuk - the shorlist effect: TBA
+- Morin, Shobchuk - the shorlist effect (not in github): 30 in total, MovieLens -> 16 matrices (15 genre matrices + 1 global matrix), Netflix -> 14 matrices (genre)
 
-In total: 91 matrices
+In total: 121 matrices
 
 ## Global Dataset Structure:
 
