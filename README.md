@@ -5,7 +5,7 @@
 - Archeology pots: 5 matrices
 - Kamilar, Atkinson - chimpanzees orangutans: 10 matrices
 - Koshevoy, Rebours - phoible: 71 matrices (70 families + 1 global matrix)
-- Dubourg, Morin - trivia: 4 matrices (3 themes and 1 global matrix)
+- Dubourg, Morin - trivia: 3 matrices (3 themes)
 - Salali et al. - BaYaka plant knowledge: 1 matrix
 - Morin, Shobchuk - the shorlist effect (not in github): 30 in total, MovieLens -> 16 matrices (15 genre matrices + 1 global matrix), Netflix -> 14 matrices (genre)
 
