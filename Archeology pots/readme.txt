@@ -13,7 +13,7 @@ loire : 332 observations (assemblages) and 331 variables (ceramic types) --> sit
 merzbach : 8 observations (chronological phases) and 36 variables (pottery motifs)
 (YES)
 
-mississippi : 20 observations and 10 variables (ceramic types) --> not fit for analysis ?
+mississippi : 20 observations (assemblages) and 10 variables (ceramic types) --> not fit for analysis ?
 (NO)
 
 zuni : 420 observations (assemblages) and 18 variables (ceramic types) --> not fit for analysis ?
