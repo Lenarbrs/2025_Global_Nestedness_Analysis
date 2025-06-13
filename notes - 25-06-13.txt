@@ -1,14 +1,20 @@
+Current steps :
+- tourner Netflix (récup données)
+- clean Netflix
+- clean bin_ml_general (MovieLens)
+(- trivia general)
+
 Data recuperation :
 - récupérer MovieLens (OK)
 - récupérer Archéologie datasets (OK)
+- run code shortlist (en cours : Movielens = OK, Netflix = OK)
 
 Data cleaning : 
 - run codes d'Edgar pour trivia (OK)
 - collapse dfs d'archéologie + binarize (OK)
 - passer Kamilar & Atkinson en csv (OK)
-- run code shortlist (en cours : Movielens = OK, Netflix = OK)
 - clean les lignes colonnes de phoible
-- revoir netflix matrices par exemple adventure que des 0 pas de 1
+- revoir netflix matrices par exemple adventure que des 0 pas de 1 (OK)
 
 Code structure :
 - passer en fonction (OK)
