@@ -13,21 +13,21 @@ Data cleaning :
 - run codes d'Edgar pour trivia (OK)
 - collapse dfs d'archéologie + binarize (OK)
 - passer Kamilar & Atkinson en csv (OK)
-- clean les lignes colonnes de phoible
+- clean les lignes colonnes de phoible (déjà fait)
 - revoir netflix matrices par exemple adventure que des 0 pas de 1 (OK)
 
 Code structure :
 - passer en fonction (OK)
 - check toutes les fonctions (OK)
 - récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
-- récupérer nestedness value et toutes matrices simulées
+- récupérer nestedness value et toutes matrices simulées (OK)
 
 Comparaison :
 - lire articles (en cours)
 - faire une synthèse des résultats (et méthodes) (en cours)
 
 Other :
-- pre-registration
+- pre-registration --> prep ?
 - faire read me (en cours)
 - mettre données dans un seul dossier (OK)
 
@@ -38,3 +38,13 @@ Matrice clean et ok pour analyse (en attente) :
 - Trivia
 - phoible
 - archeology
+
+16/05/25
+To review :
+- all data in one folder
+- code function
+- synthèse des résultats
+- relire readme
+To add :
+- go over files (loop through) + call function
+- plan pre-reg ? (bonus)
