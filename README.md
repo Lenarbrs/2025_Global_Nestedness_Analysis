@@ -25,5 +25,9 @@ Output csv:
 
 Structure:
 
-| Matrix_ID | n_rows | n_columns | coefcor | Measure (NODF/Temp) | Baseline | Type (simulated / Real) | nestedness_value | p_value |
+| Matrix_ID | n_rows | n_columns | coefcor |  Metric (NODF/Temp)  | Baseline | Type (simulated / Real) | nestedness_value | p_value |
 |-----------|--------|-----------|---------|----------------------|----------|--------------------------|------------------|---------|
+
+## Google doc 
+
+Google doc with articles overview, and informations about the matrices and baselines : https://docs.google.com/document/d/1Mr7YmTxljK23lHVOm70Fb527q6YYfOtZWjAf1tklEms/edit?usp=sharing
