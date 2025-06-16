@@ -20,7 +20,7 @@ Code structure :
 - passer en fonction (OK)
 - check toutes les fonctions (OK)
 - récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
-- récupérer nestedness value et toutes matrices simulées (Léna ?)
+- récupérer nestedness value et toutes matrices simulées (OK)
 
 Comparaison :
 - lire articles (en cours)
