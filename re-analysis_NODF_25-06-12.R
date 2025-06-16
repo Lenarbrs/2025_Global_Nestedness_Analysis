@@ -7,14 +7,15 @@ library(vegan)
 library(permute)
 library(lattice)
 
-## Parameters 
 
+## ==== 2. General parameters ====
 # set parallel options to the computer's number of cores minus 1
 options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations
 N_ITER_ = 10
 
-## ==== 2. Functions ====
+
+## ==== 3. Functions ====
 
 ### ---- A. Compute correlation ----
 compute_cor_coef <- function(matrix) {
@@ -27,6 +28,7 @@ compute_cor_coef <- function(matrix) {
   )
   return(cor(item_stats$Prevalence, item_stats$AvgInventory))
 }
+
 
 ## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id) {
@@ -41,7 +43,7 @@ nestedness_analysis <- function(matrix, matrix_id) {
     num_rows = integer(),
     num_columns = integer(),
     coef_cor = numeric(),
-    measure = character(),
+    metric = character(),
     baseline = character(),
     type = character(),
     nestedness_value = numeric(),
@@ -52,9 +54,8 @@ nestedness_analysis <- function(matrix, matrix_id) {
   ### ---- C. Coefficient of correlation ----
   cor_coef <- compute_cor_coef(matrix)
   
-  ### ---- D. Append dataframe ----
+  ### ---- D. Compute nestedness ----
   for (b in baselines) {
-    # Compute nestedness
     res <- oecosimu(
       comm        = matrix,
       nestfun     = nestednodf,
@@ -66,15 +67,16 @@ nestedness_analysis <- function(matrix, matrix_id) {
     )
     
     # indice de la ligne globale NODF
-    row_idx    <- 3L
-    # valeur réelle
-    stat_val   <- res$statistic[row_idx]
+    row_idx <- 3L
+    # valeur réelle ????
+    stat_val <- res$statistic[row_idx]
     # simulations
-    sim_vals    <- res$oecosimu$simulated[row_idx, ] 
+    sim_vals <- res$oecosimu$simulated[row_idx, ] 
     # p-value globale (identique pour toutes les simulations)
     pval_global <- res$oecosimu$pval[row_idx]
     
-    # number of simulations
+    # number of simulations 
+    # c'est pas la même chose que N_iter ?
     n_sim <- length(sim_vals)
     
     ### ---- E1. Simulated rows ----
