@@ -29,7 +29,7 @@ compute_cor_coef <- function(matrix) {
 }
 
 ## ==== 3. Nestedness analysis ====
-nestedness_analysis <- function(matrix, matrix_id) {
+nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### ---- A. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap')
@@ -41,7 +41,7 @@ nestedness_analysis <- function(matrix, matrix_id) {
     num_rows = integer(),
     num_columns = integer(),
     coef_cor = numeric(),
-    measure = character(),
+    metric = character(),
     baseline = character(),
     type = character(),
     nestedness_value = numeric(),
@@ -56,52 +56,52 @@ nestedness_analysis <- function(matrix, matrix_id) {
   for (b in baselines) {
     # Compute nestedness
     res <- oecosimu(
-      comm        = matrix,
-      nestfun     = nestednodf,
-      method      = b,
+      comm  = matrix,
+      nestfun = nestednodf,
+      method = b,
       alternative = "two.sided",
-      nsimul      = N_ITER_,
-      batchsize   = 50,
-      parallel    = TRUE
+      nsimul  = N_ITER_,
+      batchsize = 50,
+      parallel  = TRUE
     )
     
-    # indice de la ligne globale NODF
+    # Index of the NODF global columns
     row_idx    <- 3L
-    # valeur réelle
+    # Nestedness value of the real matrix
     stat_val   <- res$statistic[row_idx]
     # simulations
     sim_vals    <- res$oecosimu$simulated[row_idx, ] 
-    # p-value globale (identique pour toutes les simulations)
+    # global p-value 
     pval_global <- res$oecosimu$pval[row_idx]
     
     # number of simulations
-    n_sim <- length(sim_vals)
+    # n_sim <- length(sim_vals)
     
     ### ---- E1. Simulated rows ----
     new_sim <- data.frame(
-      matrix_id        = rep(matrix_id, n_sim),
-      num_rows         = rep(nrow(matrix), n_sim),
-      num_columns      = rep(ncol(matrix), n_sim),
-      coef_cor         = rep(cor_coef, n_sim),
-      measure          = rep("NODF", n_sim),
-      baseline         = rep(b, n_sim),
-      type             = rep("simulated", n_sim),
+      matrix_id = rep(matrix_id, N_ITER_),
+      num_rows  = rep(nrow(matrix), N_ITER_),
+      num_columns = rep(ncol(matrix), N_ITER_),
+      coef_cor = rep(cor_coef, N_ITER_),
+      metric = rep("NODF", N_ITER_),
+      baseline  = rep(b, N_ITER_),
+      type    = rep("simulated", N_ITER_),
       nestedness_value = as.numeric(sim_vals),
-      p_value          = rep(pval_global, n_sim),
+      p_value  = rep(pval_global, N_ITER_),
       stringsAsFactors = FALSE
     )
     
     ### ---- E2. Real rows ----
     new_real <- data.frame(
-      matrix_id        = matrix_id,
-      num_rows         = nrow(matrix),
-      num_columns      = ncol(matrix),
-      coef_cor         = cor_coef,
-      baseline         = b,
-      measure          = "NODF",
-      type             = "real",
+      matrix_id  = matrix_id,
+      num_rows = nrow(matrix),
+      num_columns = ncol(matrix),
+      coef_cor = cor_coef,
+      baseline = b,
+      metric = "NODF",
+      type = "real",
       nestedness_value = res$statistic$statistic[3L],
-      p_value          = pval_global,
+      p_value = pval_global,
       stringsAsFactors = FALSE
     )
     
@@ -129,4 +129,4 @@ mat_example <- matrix(c(
   0, 1, 0, 1
 ), nrow = 5, byrow = TRUE)
 
-nestedness_analysis(mat_example, "test1")
+nestedness_analysis(mat_example, "test1", N_ITER_)
