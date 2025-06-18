@@ -9,6 +9,10 @@ Meeting update :
 - absence/presence for NA in plant knowledge
 - read héraldique paper (open data)
 - think visualization
+- évaluer la corrélation entre taille de matrice 
+- faire 2 csv : rawdata (simul + vraie et stats), general (append to our metadata.csv --> p-value)
+- enregister un fichier d'output à chaque baseline pour éviter la perte de données
+- ajouter nodf row et col
 
 
 Code structure :

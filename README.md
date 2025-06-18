@@ -25,8 +25,8 @@ Output csv:
 
 Structure:
 
-| Matrix_ID | n_rows | n_columns | coefcor |  Metric (NODF/Temp)  | Baseline | Type (simulated / Real) | nestedness_value | p_value |
-|-----------|--------|-----------|---------|----------------------|----------|-------------------------|------------------|---------|
+| Matrix_ID | n_rows | n_columns | coefcor | Baseline | Type (simulated / Real) | stat_NODF_general | stat_NODF_col | stat_NODF_row | 
+|-----------|--------|-----------|---------|----------|-------------------------|-------------------|---------------|----------|----------|
 
 ## Google doc 
 
