@@ -88,7 +88,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       metric = rep("NODF", N_ITER_),
       baseline  = rep(b, N_ITER_),
       type    = rep("simulated", N_ITER_),
-=======
+      
     # indice de la ligne globale NODF
     row_idx <- 3L
     # valeur réelle ????
@@ -166,3 +166,46 @@ mat_example <- matrix(c(
 ), nrow = 5, byrow = TRUE)
 
 nestedness_analysis(mat_example, "test1", N_ITER_)
+
+
+## ==== 4. Process all matrices in a folder ====
+process_folder_matrices <- function(folder_path, N_ITER = 10) {
+  # Get list of CSV files
+  matrix_files <- list.files(path = folder_path, 
+                             pattern = "\\.csv$", 
+                             full.names = TRUE)
+  
+  # Initialize results list
+  all_results <- list()
+  
+  # Process each matrix
+  for (file in matrix_files) {
+    # Extract matrix ID from filename
+    matrix_id <- tools::file_path_sans_ext(basename(file))
+    
+    # Read matrix data
+    matrix_data <- as.matrix(read.csv(file, header = TRUE, row.names = 1))
+    
+    # Run analysis
+    results <- nestedness_analysis(matrix = matrix_data, 
+                                   matrix_id = matrix_id, 
+                                   N_ITER_ = N_ITER)
+    
+    # Store results
+    all_results[[matrix_id]] <- results
+  }
+  
+  # Combine all results into single dataframe
+  combined_results <- bind_rows(all_results, .id = "origin_file")
+  
+  # Save combined results
+  write.csv(combined_results, "all_matrices_nestedness_results.csv", row.names = FALSE)
+  
+  return(combined_results)
+}
+
+# Usage example:
+# Set your folder path containing the matrices
+folder_path <- "Cleaned_data_all"
+all_results <- process_folder_matrices(folder_path, N_ITER = 10)
+
