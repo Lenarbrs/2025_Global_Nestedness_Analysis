@@ -5,14 +5,15 @@ Current steps :
 
 
 Meeting update :
-- include ultra-filled archeology
-- absence/presence for NA in plant knowledge
-- read héraldique paper (open data)
-- think visualization
-- évaluer la corrélation entre taille de matrice 
-- faire 2 csv : rawdata (simul + vraie et stats), general (append to our metadata.csv --> p-value)
-- enregister un fichier d'output à chaque baseline pour éviter la perte de données
-- ajouter nodf row et col
+- include ultra-filled archeology |2|
+- séparer absence/presence for NA in plant knowledge |2|
+- read héraldique paper (open data) voir TheNest |3|
+- think about visualization (for later, see down) |4|
+- évaluer la corrélation entre taille de matrice et vitesse (log vs lin) --> faire run à Alexey  |1|
+- faire 2 csv : rawdata (simul + vraie et stats), general (append to our metadata.csv --> p-value) |1|
+- enregister un fichier d'output à chaque baseline pour éviter la perte de données |1|
+- ajouter nodf row et col |1|
+- gitstash
 
 
 Code structure :
