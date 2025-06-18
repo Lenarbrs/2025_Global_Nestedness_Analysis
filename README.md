@@ -13,7 +13,7 @@ In total: 121 matrices
 
 ## Global Dataset Structure:
 
-Metric: NODF
+Metric: NODF + Temp
 
 Baselines: r00, r0, r1, r2, c0, c1, curveball, swap
 
