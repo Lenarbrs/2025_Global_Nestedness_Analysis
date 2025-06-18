@@ -1,50 +1,17 @@
 Current steps :
-- tourner Netflix (récup données)
-- clean Netflix (à faire, pb python)
-- clean bin_ml_general (MovieLens)
-(- trivia general)
+- métadonnées matrices
+- clean bin_ml_general (MovieLens) (à voir)
+- journal de bord
 
-Data recuperation :
-- récupérer MovieLens (OK)
-- récupérer Archéologie datasets (OK)
-- run code shortlist (en cours : Movielens = OK, Netflix = OK)
-
-Data cleaning : 
-- run codes d'Edgar pour trivia (OK)
-- collapse dfs d'archéologie + binarize (OK)
-- passer Kamilar & Atkinson en csv (OK)
-- clean les lignes colonnes de phoible (déjà fait)
-- revoir netflix matrices par exemple adventure que des 0 pas de 1 (OK)
 
 Code structure :
-- passer en fonction (OK)
-- check toutes les fonctions (OK)
-- récupérer la p-value, la baseline, la métrique, la taille (n*m) de la matrice, un id de matrice (son petit nom)
-- récupérer nestedness value et toutes matrices simulées (OK)
+- recheck nodf global value (sait-on jamais)
+- rajout temp
+- faire boucle sur tout un dossier
 
-Comparaison :
-- lire articles (en cours)
-- faire une synthèse des résultats (et méthodes) (en cours)
 
 Other :
-- pre-registration --> prep ?
-- faire read me (en cours)
-- mettre données dans un seul dossier (OK)
+- pre-registration 
 
-Where we at
-Matrice clean et ok pour analyse (en attente) :
-- plant knowledge
-- Chimpanzee
-- Trivia
-- phoible
-- archeology
 
-16/05/25
-To review :
-- all data in one folder
-- code function
-- synthèse des résultats
-- relire readme
-To add :
-- go over files (loop through) + call function
-- plan pre-reg ? (bonus)
+
