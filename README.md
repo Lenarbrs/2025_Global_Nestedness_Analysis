@@ -18,15 +18,22 @@ Metric: NODF + Temp
 Baselines: r00, r0, r1, r2, c0, c1, curveball, swap
 
 Output csv: 
-- 1 csv per matrix
-- 7,007 rows (7 baselines * 1,000 simulations + 1 real rows * 7 baselines)
-- 9 columns
-- c1 in another csv
+- 2 csv per matrix (A and B), plus 8 oecosimu csv (C)
+- A : 8,008 rows (8 baselines * 1,000 simulations + 1 real rows * 8 baselines) and 9 columns
+- B : 1 row and 12 columns
+- C : oecosimu tables, one csv for each baseline
 
-Structure:
+Structure dataset A (rawdata) :
 
-| Matrix_ID | n_rows | n_columns | Baseline | Type (simulated / Real) | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp |
-|-----------|--------|-----------|----------|-------------------------|-------------------|---------------|---------------|-----------|
+| Matrix_ID | Baseline | Type (simulated / Real) | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp |
+|-----------|----------|-------------------------|-------------------|---------------|---------------|-----------|
+
+Structure dataset B (general) :
+
+| Matrix_ID | n_row | n_col | fill | size | coef_cor | p_value_NODF_[baseline]*8 | p_value_Temp_[baseline]*8 | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp |
+|-----------|-------|-------|------|------|----------|---------------------------|---------------------------|-------------------|---------------|
+--------------|-----------|
+
 
 ## Google doc 
 
