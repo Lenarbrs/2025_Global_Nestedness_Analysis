@@ -1,6 +1,6 @@
 Current steps :
 - tourner Netflix (récup données)
-- clean Netflix
+- clean Netflix (à faire, pb python)
 - clean bin_ml_general (MovieLens)
 (- trivia general)
 
