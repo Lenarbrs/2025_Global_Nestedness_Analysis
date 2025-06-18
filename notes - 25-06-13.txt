@@ -4,6 +4,13 @@ Current steps :
 - journal de bord
 
 
+Meeting update :
+- include ultra-filled archeology
+- absence/presence for NA in plant knowledge
+- read héraldique paper (open data)
+- think visualization
+
+
 Code structure :
 - recheck nodf global value (sait-on jamais)
 - rajout temp
@@ -14,4 +21,7 @@ Other :
 - pre-registration 
 
 
-
+Think about visualisation :
+- matrix size vs nestedness/anti-nestedness
+- fill vs nestedness
+- 
