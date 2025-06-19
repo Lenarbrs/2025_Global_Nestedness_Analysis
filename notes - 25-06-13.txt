@@ -14,6 +14,8 @@ Meeting update :
 - enregister un fichier d'output à chaque baseline pour éviter la perte de données |1|
 - ajouter nodf row et col |1|
 - gitstash
+- ajouter c1 directement dans le code |1|
+- keep the big movie lens matrix w/o sampling 
 
 
 Code structure :
