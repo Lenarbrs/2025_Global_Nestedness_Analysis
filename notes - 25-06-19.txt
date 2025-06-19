@@ -1,11 +1,12 @@
 Current steps :
-- métadonnées matrices
-- clean bin_ml_general (MovieLens) (à voir)
+- métadonnées matrices (to be completed with BaYaka)
+- clean bin_ml_general (MovieLens) (à voir) --> abandon
 - journal de bord
+- pre-registration
 
 
 Meeting update :
-- include ultra-filled archeology |2|
+- include ultra-filled archeology |2| (OK)
 - séparer absence/presence for NA in plant knowledge |2|
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
@@ -15,7 +16,7 @@ Meeting update :
 - ajouter nodf row et col |1|
 - gitstash
 - ajouter c1 directement dans le code |1|
-- keep the big movie lens matrix w/o sampling 
+- keep the big movie lens matrix w/o sampling (Need to talk about this, we're not on the same page here)
 
 
 Code structure :
@@ -24,11 +25,8 @@ Code structure :
 - faire boucle sur tout un dossier
 
 
-Other :
-- pre-registration 
-
-
 Think about visualisation :
 - matrix size vs nestedness/anti-nestedness
 - fill vs nestedness
-- 
+- phoible plot
+- heatmaps
