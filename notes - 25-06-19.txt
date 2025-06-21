@@ -1,5 +1,5 @@
 Current steps :
-- métadonnées matrices (to be completed with BaYaka)
+- métadonnées matrices (OK)
 - clean bin_ml_general (MovieLens) (à voir) --> abandon
 - journal de bord
 - pre-registration
