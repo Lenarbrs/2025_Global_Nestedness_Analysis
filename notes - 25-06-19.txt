@@ -1,5 +1,5 @@
 Current steps :
-- métadonnées matrices (to be completed with BaYaka)
+- métadonnées matrices (OK)
 - clean bin_ml_general (MovieLens) (à voir) --> abandon
 - journal de bord
 - pre-registration
@@ -7,7 +7,7 @@ Current steps :
 
 Meeting update :
 - include ultra-filled archeology |2| (OK)
-- séparer absence/presence for NA in plant knowledge |2|
+- séparer absence/presence for NA in plant knowledge |2| (OK)
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
 - évaluer la corrélation entre taille de matrice et vitesse (log vs lin) --> faire run à Alexey  |1|
@@ -16,7 +16,7 @@ Meeting update :
 - ajouter nodf row et col |1|
 - gitstash
 - ajouter c1 directement dans le code |1|
-- keep the big movie lens matrix w/o sampling (Need to talk about this, we're not on the same page here)
+- keep the big movie lens matrix w/o sampling (Need to talk about this, we're not on the same page here) --> I was thinking abt the drama matrix not the bin_ml_general
 
 
 Code structure :
