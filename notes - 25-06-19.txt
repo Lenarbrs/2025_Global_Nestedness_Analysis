@@ -12,10 +12,10 @@ Meeting update :
 - think about visualization (for later, see down) |4|
 - évaluer la corrélation entre taille de matrice et vitesse (log vs lin) --> faire run à Alexey  |1|
 - faire 2 csv : rawdata (simul + vraie et stats), general (append to our metadata.csv --> p-value) |1|
-- enregister un fichier d'output à chaque baseline pour éviter la perte de données |1|
+- enregister un fichier d'output à chaque baseline pour éviter la perte de données |1| (OK) (need to check if there is a better method like an object)
 - ajouter nodf row et col |1|
 - gitstash
-- ajouter c1 directement dans le code |1|
+- ajouter c1 directement dans le code |1| (OK) (need to check that the inverted matrix is really only used for c1 and not the other baselines)
 - keep the big movie lens matrix w/o sampling (Need to talk about this, we're not on the same page here) --> I was thinking abt the drama matrix not the bin_ml_general
 
 
