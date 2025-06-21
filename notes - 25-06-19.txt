@@ -7,7 +7,7 @@ Current steps :
 
 Meeting update :
 - include ultra-filled archeology |2| (OK)
-- séparer absence/presence for NA in plant knowledge |2|
+- séparer absence/presence for NA in plant knowledge |2| (OK)
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
 - évaluer la corrélation entre taille de matrice et vitesse (log vs lin) --> faire run à Alexey  |1|
