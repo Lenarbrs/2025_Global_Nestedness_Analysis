@@ -32,8 +32,8 @@ compute_cor_coef <- function(matrix) {
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### ---- A. Parameters list ----
-  baselines <- c('r00', 'r0', 'r1', 'r2','c0','curveball', 'swap')
-  # add c1, inverse matrix then r1
+  baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
+  metrics   <- c("NODF", "Temp")
   
   ### ---- B. Initialize empty dataframe ----
   df_cols <- list(
@@ -54,11 +54,15 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### ---- D. Append dataframe ----
   for (b in baselines) {
+    current_matrix <- matrix
+    baseline_used  <- if (b == 'c1') { current_matrix <- 1 - matrix; 'r1' } else b
+    
+      
     # Compute nestedness
     res <- oecosimu(
-      comm  = matrix,
+      comm  = current_matrix,
       nestfun = nestednodf,
-      method = b,
+      method = baseline_used,
       alternative = "two.sided",
       nsimul = N_ITER_,
       batchsize = 50,
@@ -107,15 +111,14 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     
     ### ---- F. Final Dataframe  ----
     df_nestedness <- rbind(df_nestedness, new_sim, new_real)
+    
+    ### ---- G. Save the dataset for each baseline ----
+    
+    write.csv(df_nestedness, 
+              paste0("analysis_nestedness_", matrix_id,"_", b, ".csv"), 
+              row.names = FALSE)
   }
-  ### ---- G. Save the dataset ----
-  
-  write.csv(df_nestedness, 
-            paste0("analysis_nestedness_", matrix_id, ".csv"), 
-            row.names = FALSE)
   return(df_nestedness)
-  
-  
 }
 
 
