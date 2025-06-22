@@ -164,14 +164,13 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     
     ### ---- F. Final Dataframe  ----
     df_metric <- bind_rows(df_metric, new_sim, new_real)
-  }
     
-    ### ---- G. After all baselines for this metric: write a csv ----
+    ### ---- G. After every baselines for this metric: write a csv ----
     write.csv(
       df_metric,
       paste0("analysis_nestedness_", matrix_id, "_", met, ".csv"),
-      row.names = FALSE
-    )
+      row.names = FALSE)
+   }
   }
 }
 
