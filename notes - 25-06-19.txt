@@ -25,6 +25,7 @@ Code structure :
 - faire boucle sur tout un dossier
 
 => I've updated the code on github but it does not seem to work, need to check why
++ voir si meilleur moyen que d'avoir des NA dans le csv de temp dans les colonnes "value rows" / "value columns" 
 
 
 Think about visualisation :
