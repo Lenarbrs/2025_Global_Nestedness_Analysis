@@ -1,4 +1,6 @@
-# ======== Re analysis of nestedness in empirical matrices ========
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Re analysis of nestedness in empirical matrices ----
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 ## ==== 1. Library import ====
 library(tidyverse)
@@ -12,7 +14,7 @@ library(lattice)
 # set parallel options to the computer's number of cores minus 1
 options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations
-N_ITER_ = 10
+N_ITER_ <- 10
 
 ## ==== 2. Functions ====
 
@@ -36,90 +38,143 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   metrics   <- c("NODF", "Temp")
   
   ### ---- B. Initialize empty dataframe ----
-  df_cols <- list(
+  for (met in metrics) {
+  df_metric <- data.frame(
     matrix_id = character(),
     num_rows = integer(),
     num_columns = integer(),
-    coef_cor = numeric(),
+    cor_coef = numeric(),
     metric = character(),
     baseline = character(),
     type = character(),
-    nestedness_value = numeric(),
-    p_value = numeric()
+    columns_value  = numeric(),
+    rows_value     = numeric(),
+    global_value   = numeric(),
+    p_value        = numeric()
   )
-  df_nestedness <- do.call(data.frame, c(df_cols, stringsAsFactors = FALSE))
   
   ### ---- C. Coefficient of correlation ----
   cor_coef <- compute_cor_coef(matrix)
   
   ### ---- D. Append dataframe ----
-  for (b in baselines) {
+    for (b in baselines) {
+    ### ---- D1. Prepare matrix & method ----
     current_matrix <- matrix
-    baseline_used  <- if (b == 'c1') { current_matrix <- 1 - matrix; 'r1' } else b
+    baseline_used <- b
+    # Create the c1 baseline
+    if (b == 'c1') { 
+      current_matrix <- 1 - matrix
+      baseline_used <- 'r1' 
+    } 
+    # Choose the metric
+    if (met == "NODF") {
+      nestfun  <- nestednodf
+      stat_idx <- 3    # global NODF
+    } else {
+      nestfun  <- nestedtemp
+      stat_idx <- 1    # Temperature
+    }
     
-      
-    # Compute nestedness
+    ### ---- D2. Run oecosimu ----
     res <- oecosimu(
       comm  = current_matrix,
-      nestfun = nestednodf,
+      nestfun = nestfun,
       method = baseline_used,
       alternative = "two.sided",
       nsimul = N_ITER_,
       batchsize = 50,
-      parallel= TRUE
+      parallel = TRUE
     )
     
-    # Index of the global Nodf value
-    row_idx    <- 3
-    # Nodf value of the real matrix
-    stat_val   <- res$statistic[row_idx]
-    # simulations
-    sim_vals    <- res$oecosimu$simulated[row_idx, ] 
-    # global p-value
-    pval_global <- res$oecosimu$pval[row_idx]
-    
+    ## Statistics
+    # Nestedness value of the real matrix
+    stat_val <- res$statistic$statistic   
+    # p-value
+    pval <- res$oecosimu$pval[stat_idx]
     
     ### ---- E1. Simulated rows ----
+    
+    # For NODF
+    if (met == "NODF") {
+    sim_mat <- as.data.frame(t(res$oecosimu$simulated))
+    colnames(sim_mat) <- c("columns_value",
+                          "rows_value",
+                          "global_value")
+    } else {
+      sim_mat <- data.frame(
+        columns_value = NA,
+        rows_value    = NA,
+        global_value  = as.numeric(res$oecosimu$simulated)
+      )
+    }
+    
     new_sim <- data.frame(
       matrix_id = rep(matrix_id, N_ITER_),
       num_rows = rep(nrow(matrix), N_ITER_),
       num_columns = rep(ncol(matrix), N_ITER_),
-      coef_cor = rep(cor_coef, N_ITER_),
-      metric  = rep("NODF", N_ITER_),
-      baseline  = rep(b, N_ITER_),
+      cor_coef = rep(cor_coef, N_ITER_),
+      metric = rep(met , N_ITER_),
+      baseline = rep(b, N_ITER_),
       type  = rep("simulated", N_ITER_),
-      nestedness_value = as.numeric(sim_vals),
-      p_value = rep(pval_global, N_ITER_),
+      columns_value = sim_mat$columns_value,
+      rows_value = sim_mat$rows_value,
+      global_value = sim_mat$global_value,
+      p_value = rep(pval, N_ITER_),
       stringsAsFactors = FALSE
     )
     
     ### ---- E2. Real rows ----
+    
+    # For NODF
+    if (met == "NODF") {
     new_real <- data.frame(
       matrix_id  = matrix_id,
       num_rows = nrow(matrix),
       num_columns = ncol(matrix),
-      coef_cor = cor_coef,
+      cor_coef = cor_coef,
+      metric = met,
       baseline = b,
-      metric = "NODF",
       type   = "real",
-      nestedness_value = res$statistic$statistic[3L],
-      p_value = pval_global,
+      columns_value = stat_val[1],
+      rows_value= stat_val[2],
+      global_value = stat_val[3],
+      p_value = pval,
       stringsAsFactors = FALSE
     )
     print(res$oecosimu$simulated)
     print(res$statistic)
     
+    # For Temperature
+    } else {
+      new_real <- data.frame(
+        matrix_id = matrix_id,
+        num_rows  = nrow(matrix),
+        num_columns = ncol(matrix),
+        cor_coef = cor_coef,
+        metric = met,
+        baseline = b,
+        type = "real",
+        columns_value = NA,
+        rows_value = NA,
+        global_value  = stat_val[1],
+        p_value = pval,
+        stringsAsFactors = FALSE
+      )
+    }
+    
     ### ---- F. Final Dataframe  ----
-    df_nestedness <- rbind(df_nestedness, new_sim, new_real)
-    
-    ### ---- G. Save the dataset for each baseline ----
-    
-    write.csv(df_nestedness, 
-              paste0("analysis_nestedness_", matrix_id,"_", b, ".csv"), 
-              row.names = FALSE)
+    df_metric <- bind_rows(df_metric, new_sim, new_real)
   }
-  return(df_nestedness)
+    
+    ### ---- G. After all baselines for this metric: write a csv ----
+    write.csv(
+      df_metric,
+      paste0("analysis_nestedness_", matrix_id, "_", met, ".csv"),
+      row.names = FALSE
+    )
+  }
 }
+
 
 
 ## Example 
