@@ -63,7 +63,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     baseline_used <- b
     # Create the c1 baseline
     if (b == 'c1') { 
-      current_matrix <- 1 - matrix
+      current_matrix <- 1 - matrix # not the right inverse
       baseline_used <- 'r1' 
     } 
     # Choose the metric
