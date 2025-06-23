@@ -1,11 +1,11 @@
-boves : 8 observations (periods) and 13 variables (ceramic types) --> only 4 empty cells, not fit for analysis (à ajouter)
-(NO)
+boves : 8 observations (periods) and 13 variables (ceramic types) --> only 4 empty cells
+(YES)
 
 chevelon : 12 observations (sites) and 10 variables (ground stone types)
 (YES)
 
-compiegne : 5 observations (periods) and 16 variables (ceramic types) --> only 3 empty cells, not fit for analysis (à ajouter)
-(NO)
+compiegne : 5 observations (periods) and 16 variables (ceramic types) --> only 3 empty cells
+(YES)
 
 loire : 332 observations (assemblages) and 331 variables (ceramic types) --> site, city, area
 (YES)*3
