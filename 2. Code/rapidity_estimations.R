@@ -25,11 +25,12 @@ if (!exists("nestedness_analysis")) {
 
 ## ==== 3. Matrices simulation ====
 ### A.  Define matrix sizes ----
-# (they resemble matrcies from our data)
+# These sizes are more or less the same as the matrices we have in our data
 matrix_sizes <- list(
   c(4, 30), c(12, 10), c(5, 40), c(8, 30),
   c(6, 50), c(10, 30), c(4, 90), c(7, 50),
-  c(5, 130), c(40, 20), c(15, 70), c(20, 60)
+  c(5, 130), c(40, 20), c(15, 70), c(20, 60),
+  c(100, 200), c(200,300), c(150, 125)
 )
 
 ### B.  Generate random binary matrix with target fill ----
@@ -83,7 +84,7 @@ for (size in matrix_sizes) {
 
 ## ==== 5. Visualisation ====
 ggplot(results, aes(x = size, y = time)) +
-  geom_point(aes(size = fill), color = "dodgerblue", alpha = 0.8) +
+  geom_point(aes(size = fill), color = "darkblue", alpha = 0.8) +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
   labs(title = "Execution Time vs. Matrix Size",
        subtitle = "Linear regression with 95% confidence interval",
