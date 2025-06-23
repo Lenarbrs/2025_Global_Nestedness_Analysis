@@ -1,6 +1,6 @@
 # Global_Nestedness_Analysis
 
-## Original Datasets: (to update)
+## Original Datasets: 
 
 - Archeology pots: 7 matrices
 - Kamilar, Atkinson - chimpanzees orangutans: 10 matrices (4 humans + 3 chimpanzees + 3 ourangutans)
@@ -30,8 +30,8 @@ Structure dataset A (rawdata) :
 
 Structure dataset B (general) :
 
-| Matrix_ID | n_row | n_col | fill | size | coef_cor | p_value_NODF_[baseline]*8 | p_value_Temp_[baseline]*8 | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp |
-|-----------|-------|-------|------|------|----------|---------------------------|---------------------------|-------------------|---------------|--------------|-----------|
+| Matrix_ID | n_row | n_col | fill | size | coef_cor | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp | p_value_NODF_[baseline]*8 | p_value_Temp_[baseline]*8 | 
+|-----------|-------|-------|------|------|----------|-------------------|---------------|---------------|-----------|---------------------------|---------------------------|
 
 
 ## Google doc 
