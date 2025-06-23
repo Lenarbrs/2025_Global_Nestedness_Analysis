@@ -19,7 +19,7 @@ Baselines: r00, r0, r1, r2, c0, c1, curveball, swap
 
 Output csv: 
 - 2 csv per matrix (A and B), plus 8 oecosimu csv (C)
-- A : 8,008 rows (8 baselines * 1,000 simulations + 1 real rows * 8 baselines) and 9 columns
+- A : 8,000 rows (8 baselines * 1,000 simulations) and 9 columns
 - B : 1 row and 12 columns
 - C : oecosimu tables, one csv for each baseline
 
