@@ -63,7 +63,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     baseline_used <- b
     # Create the c1 baseline
     if (b == 'c1') { 
-      current_matrix <- 1 - matrix # not the right inverse
+      current_matrix <- t(matrix)
       baseline_used <- 'r1' 
     } 
     # Choose the metric
@@ -166,10 +166,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     df_metric <- bind_rows(df_metric, new_sim, new_real)
     
     ### ---- G. After every baselines for this metric: write a csv ----
-    write.csv(
-      df_metric,
-      paste0("analysis_nestedness_", matrix_id, "_", met, ".csv"),
-      row.names = FALSE)
+    # write.csv(
+    #   df_metric,
+    #   paste0("analysis_nestedness_", matrix_id, "_", met, ".csv"),
+    #   row.names = FALSE)
    }
   }
 }
