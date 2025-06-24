@@ -25,7 +25,7 @@ Output csv:
 
 Structure dataset A (rawdata) :
 
-| Matrix_ID | Baseline | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp |
+| Matrix_ID | Baseline | stat_NODF_general | stat_NODF_col | stat_NODF_row | stat_Temp | 
 |-----------|----------|-------------------|---------------|---------------|-----------|
 
 Structure dataset B (general) :
