@@ -4,10 +4,12 @@ Current steps :
 - journal de bord
 - pre-registration
 
-
-Meeting update :
+Already done:
 - include ultra-filled archeology |2| (OK)
 - séparer absence/presence for NA in plant knowledge |2| (OK)
+
+
+Meeting update :
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
 - évaluer la corrélation entre taille de matrice et vitesse (log vs lin) --> faire run à Alexey  |1|
@@ -16,18 +18,14 @@ Meeting update :
 - ajouter nodf row et col |1| (OK) 
 - gitstash
 - ajouter c1 directement dans le code |1| (OK) (need to check that the inverted matrix is really only used for c1 and not the other baselines)
-- keep the big movie lens matrix w/o sampling (we're on the same page here) --> I was thinking abt the drama matrix not the bin_ml_general
-- keep the big movie lens matrix w/o sampling (Need to talk about this, we're not on the same page here) --> I was thinking abt the drama matrix not the bin_ml_general
 - Faire en sorte de garder les mêmes 1000 simulations par baseline pour Nodf ET temp |1|
+- Faire code pour p-values + significativité side |1|
 
 
 Code structure :
 - recheck nodf global value (sait-on jamais)
 - rajout temp
 - faire boucle sur tout un dossier
-
-=> I've updated the code on github but it does not seem to work, need to check why
-+ voir si meilleur moyen que d'avoir des NA dans le csv de temp dans les colonnes "value rows" / "value columns" 
 
 
 Think about visualisation :
