@@ -19,22 +19,36 @@ N_ITER_ <- 10
 ## ==== 2. Functions ====
 ### ---- A. Compute correlation ----
 compute_cor_coef <- function(matrix) {
+  row_totals <- rowSums(matrix)
+  
   avg_inventory <- apply(matrix, 2, function(item_col) {
-    mean(rowSums(matrix)[item_col == 1])
+    selected <- row_totals[item_col == 1]
+    if (length(selected) == 0) {
+      return(NA_real_)  # Avoid NaN by returning explicit NA
+    } else {
+      return(mean(selected))
+    }
   })
+  
   item_stats <- data.frame(
     Prevalence = colSums(matrix),
     AvgInventory = avg_inventory
   )
-  # Handle errors
-  sd_prev <- sd(item_stats$Prevalence)
-  sd_avginv <- sd(item_stats$AvgInventory)
-  if (sd_prev == 0 || sd_avginv == 0) {
-    return(NA)  # Correlation undefined
-  } else {
-    return(cor(item_stats$Prevalence, item_stats$AvgInventory))
+  
+  if (anyNA(item_stats)) {
+    return(NA_real_)  # If any NA, correlation can't be computed
   }
+  
+  sd_prev <- sd(item_stats$Prevalence, na.rm = TRUE)
+  sd_avginv <- sd(item_stats$AvgInventory, na.rm = TRUE)
+  
+  if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
+    return(NA_real_)
+  }
+  
+  return(cor(item_stats$Prevalence, item_stats$AvgInventory))
 }
+
 
 
 
@@ -65,7 +79,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     temp_stat = nodf_gen_stat,
     stringsAsFactors = FALSE
   )
-  write.csv(df_summary, paste0("summary_", matrix_id, ".csv"), row.names = FALSE)
+  write.csv2(df_summary, paste0("summary_", matrix_id, ".csv"), row.names = FALSE)
   
   ### C. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
@@ -83,6 +97,17 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### E. Simulated matrices dataset ----
   for (b in baselines) {
+    # For sanity saves purpose
+    df_simulated_b <- data.frame(
+      matrix_id = character(),
+      baseline = character(),
+      ceof_cor = numeric(),
+      nodf_columns_stat = numeric(),
+      nodf_rows_stat = numeric(),
+      nodf_general_stat = numeric(),
+      temp_stat = numeric(),
+      stringsAsFactors = FALSE)
+    
     current_matrix <- matrix
     baseline_used <- b
     # c1 special treatment
@@ -96,17 +121,6 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     
     for (i in 1:dim(simulated_mat)[3]) {
       sim_i <- simulated_mat[, , i]
-      
-      # For sanity saves purpose
-      df_simulated_b <- data.frame(
-        matrix_id = character(),
-        baseline = character(),
-        ceof_cor = numeric(),
-        nodf_columns_stat = numeric(),
-        nodf_rows_stat = numeric(),
-        nodf_general_stat = numeric(),
-        temp_stat = numeric(),
-        stringsAsFactors = FALSE)
       
       ### F. Calculate simulated matrices nestedness properties ----
       # Coefficient of correlation
@@ -133,17 +147,16 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       df_simulated <- rbind(df_simulated, row_sim)
       df_simulated_b <- rbind(df_simulated_b, row_sim)
     }
-    write.csv(df_simulated_b, paste0("simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
+    write.csv2(df_simulated_b, paste0("simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
   }
   
-  ### ---- G. After every baselines for this metric: write a csv ----
-  write.csv(df_simulated, paste0("simulated_", matrix_id, "_all.csv"), row.names = FALSE)
+  ### G. After every baselines for this metric: write a csv ----
+  write.csv2(df_simulated, paste0("simulated_", matrix_id, "_all.csv"), row.names = FALSE)
 }
 
 
 
-## Example 
-
+## ==== 4. Test ====
 mat_example <- matrix(c(
   1, 1, 1, 1,
   1, 1, 0, 0,
