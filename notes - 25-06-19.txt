@@ -27,6 +27,12 @@ Code structure :
 - rajout temp
 - faire boucle sur tout un dossier
 
+Petites réfexions par rapport à la structure du dataset :
+- On rajoute le fill des matrices simulées ?
+- le nb de lignes de colonnes des matrices simulées ? (car par exemple avec c0 il y a des colonnes qui peuvent avoir que des 0)
+- le nb de ligne / colonnes avec que des 0 dans les mat simulées
+
+
 
 Think about visualisation :
 - matrix size vs nestedness/anti-nestedness
