@@ -25,8 +25,8 @@ Code structure :
 - recheck nodf global value (sait-on jamais) (OK)
 - rajout temp (OK)
 - faire boucle sur tout un dossier (clean les noms)
-- rajouter fill + size
-- enregistrer toutes les matrices (question posée sur workflowy)
+- rajouter fill + size (OK)
+- enregistrer toutes les matrices (question posée sur workflowy) (OK)
 
 Petites réfexions par rapport à la structure du dataset :
 - On rajoute le fill des matrices simulées ?
