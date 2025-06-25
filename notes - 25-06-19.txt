@@ -4,6 +4,7 @@ Current steps :
 - pre-registration
 - code skeleton
 - code rapidity
+- P-VALUE (two sided, *2)
 
 Already done:
 - include ultra-filled archeology |2| (OK)
@@ -24,7 +25,7 @@ Meeting update :
 Code structure :
 - recheck nodf global value (sait-on jamais) (OK)
 - rajout temp (OK)
-- faire boucle sur tout un dossier (clean les noms)
+- faire boucle sur tout un dossier (clean les noms) (OK)
 - rajouter fill + size (OK)
 - enregistrer toutes les matrices (question posée sur workflowy) (OK)
 

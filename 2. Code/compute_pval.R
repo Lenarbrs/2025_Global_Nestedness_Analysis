@@ -12,9 +12,9 @@ real_file <- "real_matrices.csv"
 sims  <- read_csv(sim_file)
 reals <- read_csv(real_file) %>%
   select(
-    Matrix_ID,
-    obs_NODF = stat_NODF_general,
-    obs_Temp = stat_Temp
+    matrix_id,
+    obs_NODF = stat_nodf_general,
+    obs_Temp = stat_temp
   )
 
 # ====== 3. Two-Sided Empirical P-Value Function ======

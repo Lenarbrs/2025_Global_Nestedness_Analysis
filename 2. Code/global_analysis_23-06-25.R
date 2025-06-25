@@ -93,10 +93,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     size = num_elements,
     fill = fill_percentage,
     cor_coef = cor_coef,
-    nodf_columns_stat = nodf_col_stat,
-    nodf_rows_stat = nodf_row_stat,
-    nodf_general_stat = nodf_gen_stat,
-    temp_stat = temp_stat,
+    stat_nodf_columns = nodf_col_stat,
+    stat_nodf_rows = nodf_row_stat,
+    stat_nodf_general = nodf_gen_stat,
+    stat_temp = temp_stat,
     stringsAsFactors = FALSE
   )
   write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
@@ -112,10 +112,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     matrix_id = character(),
     baseline = character(),
     ceof_cor = numeric(),
-    nodf_columns_stat = numeric(),
-    nodf_rows_stat = numeric(),
-    nodf_general_stat = numeric(),
-    temp_stat = numeric(),
+    stat_nodf_columns = numeric(),
+    stat_nodf_rows = numeric(),
+    stat_nodf_general = numeric(),
+    stat_temp = numeric(),
     stringsAsFactors = FALSE)
   
   ### E. Simulated matrices dataset ----
@@ -125,10 +125,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       matrix_id = character(),
       baseline = character(),
       ceof_cor = numeric(),
-      nodf_columns_stat = numeric(),
-      nodf_rows_stat = numeric(),
-      nodf_general_stat = numeric(),
-      temp_stat = numeric(),
+      stat_nodf_columns = numeric(),
+      stat_nodf_rows = numeric(),
+      stat_nodf_general = numeric(),
+      stat_temp = numeric(),
       stringsAsFactors = FALSE)
     
     # Directory for simulated matrices
@@ -165,10 +165,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
         matrix_id = matrix_id,
         baseline = b,
         ceof_cor = cor_coef_sim,
-        nodf_columns_stat = nodf_col_stat,
-        nodf_rows_stat = nodf_row_stat,
-        nodf_general_stat = nodf_gen_stat,
-        temp_stat = temp_stat,
+        stat_nodf_columns = nodf_col_stat,
+        stat_nodf_rows = nodf_row_stat,
+        stat_nodf_general = nodf_gen_stat,
+        stat_temp = temp_stat,
         stringsAsFactors = FALSE)
       # append results
       df_simulated <- rbind(df_simulated, row_sim)
