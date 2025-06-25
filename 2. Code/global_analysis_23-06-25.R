@@ -56,6 +56,10 @@ compute_cor_coef <- function(matrix) {
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### A. Calculate real matrix nestedness properties ----
+  # Size and Fill
+  num_elements <- nrow(matrix)*ncol(matrix)
+  num_ones <- sum(mat == 1)
+  fill_percentage <- (num_ones / num_elements) * 100
   # Coefficient of correlation
   cor_coef <- compute_cor_coef(matrix)
   # Nestedness scores
@@ -72,6 +76,8 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     matrix_id = matrix_id,
     num_rows = nrow(matrix),
     num_columns = ncol(matrix),
+    size = num_elements,
+    fill = fill_percentage,
     cor_coef = cor_coef,
     nodf_columns_stat = nodf_col_stat,
     nodf_rows_stat = nodf_row_stat,
@@ -79,7 +85,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     temp_stat = temp_stat,
     stringsAsFactors = FALSE
   )
-  write.csv2(df_summary, paste0("summary_", matrix_id, ".csv"), row.names = FALSE)
+  write.csv2(df_summary, paste0("nest_summary_", matrix_id, ".csv"), row.names = FALSE)
   
   ### C. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
@@ -108,6 +114,9 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       temp_stat = numeric(),
       stringsAsFactors = FALSE)
     
+    # Directory for simulated matrices
+    dir.create(paste0("simmat_",matrix_id, "_", b))
+    
     current_matrix <- matrix
     baseline_used <- b
     # c1 special treatment
@@ -134,6 +143,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       nodf_row_stat <- as.numeric(nodf_sim_matrix$statistic[2])
       nodf_gen_stat <- as.numeric(nodf_sim_matrix$statistic[3])
       
+      ### G. Unite results and append dataframes ----
       row_sim <- data.frame(
         matrix_id = matrix_id,
         baseline = b,
@@ -146,14 +156,18 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       # append results
       df_simulated <- rbind(df_simulated, row_sim)
       df_simulated_b <- rbind(df_simulated_b, row_sim)
+      
+      # Save simulated matrix
+      mat_directory <- paste0("simmat_", matrix_id, "_", b, "/simmat_", matrix_id, "_", b, "_", i, ".csv")
+      write.csv2(sim_i, mat_directory)
     }
-    write.csv2(df_simulated_b, paste0("simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
+    # Save nestedness results of simulated matrices for 1 baseline
+    write.csv2(df_simulated_b, paste0("nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
   }
   
-  ### G. After every baselines for this metric: write a csv ----
-  write.csv2(df_simulated, paste0("simulated_", matrix_id, "_all.csv"), row.names = FALSE)
+  ### H. Save nestedness results of simulated matrices for all baselines ----
+  write.csv2(df_simulated, paste0("nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
 }
-
 
 
 ## ==== 4. Test ====
@@ -179,6 +193,4 @@ for (i in 1:dim(simulated_mat)[3]) {
   print("Simulated matrix ", i)
   print(sim_i)
   }
-
-
 
