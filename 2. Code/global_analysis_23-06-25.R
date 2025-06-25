@@ -76,7 +76,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     nodf_columns_stat = nodf_col_stat,
     nodf_rows_stat = nodf_row_stat,
     nodf_general_stat = nodf_gen_stat,
-    temp_stat = nodf_gen_stat,
+    temp_stat = temp_stat,
     stringsAsFactors = FALSE
   )
   write.csv2(df_summary, paste0("summary_", matrix_id, ".csv"), row.names = FALSE)
@@ -166,6 +166,19 @@ mat_example <- matrix(c(
 ), nrow = 5, byrow = TRUE)
 
 nestedness_analysis(mat_example, "test1", N_ITER_)
+
+# Sanity check
+nullmodel_mat <- nullmodel(x = mat_example, method = "r00")
+print("nullmodel matrix")
+print(nullmodel_mat)
+simulated_mat <- simulate(object = nullmodel_mat, nsim = 10)
+print("simulated matrix object")
+print(simulated_mat)
+for (i in 1:dim(simulated_mat)[3]) {
+  sim_i <- simulated_mat[, , i]
+  print("Simulated matrix ", i)
+  print(sim_i)
+  }
 
 
 
