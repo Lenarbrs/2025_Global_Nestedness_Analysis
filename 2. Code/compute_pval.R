@@ -57,5 +57,17 @@ pvals_df <- reals %>%
     names_sep   = "_"
   )
 
+pvals_df_formatted <- pvals_df %>%
+  mutate(
+    across(
+      starts_with("p_value"),
+      ~ formatC(.x, format = "f", digits = 6)
+    )
+  )
+
 # ===== 5. Export Results =====
-# write_csv(pvals_df, "nestedness_pvalues.csv")
+# write_csv2(pvals_df,
+#            file   = "nestedness_pvalues.csv",
+#            row.names = FALSE,
+#            digits = 8
+# )
