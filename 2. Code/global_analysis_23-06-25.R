@@ -19,37 +19,48 @@ N_ITER_ <- 10
 ## ==== 2. Functions ====
 ### ---- A. Compute correlation ----
 compute_cor_coef <- function(matrix) {
+  # Compute the total number of items each row (agent) holds
   row_totals <- rowSums(matrix)
   
+  # For each item (i.e., each column), calculate the average inventory size of agents who hold it
   avg_inventory <- apply(matrix, 2, function(item_col) {
+    # Select the row totals only for agents who have this item (i.e., where item_col == 1)
     selected <- row_totals[item_col == 1]
+    
+    # If no agent has the item, return NA to avoid mean(numeric(0)) = NaN
     if (length(selected) == 0) {
-      return(NA_real_)  # Avoid NaN by returning explicit NA
+      return(NA_real_)
     } else {
+      # Otherwise, return the average inventory size of agents who have the item
       return(mean(selected))
     }
   })
   
+  # Create a data frame with two statistics per item:
+  # - Prevalence: how many agents have the item (column sum)
+  # - AvgInventory: average inventory size of those agents
   item_stats <- data.frame(
     Prevalence = colSums(matrix),
     AvgInventory = avg_inventory
   )
   
+  # If any NA exists in Prevalence or AvgInventory, correlation can't be computed
   if (anyNA(item_stats)) {
-    return(NA_real_)  # If any NA, correlation can't be computed
+    return(NA_real_)
   }
   
+  # Compute the standard deviations to check for constant vectors
   sd_prev <- sd(item_stats$Prevalence, na.rm = TRUE)
   sd_avginv <- sd(item_stats$AvgInventory, na.rm = TRUE)
   
+  # If either standard deviation is NA (shouldn’t happen now) or equal to 0, correlation is undefined
   if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
     return(NA_real_)
   }
   
+  # Compute and return the Pearson correlation between Prevalence and AvgInventory
   return(cor(item_stats$Prevalence, item_stats$AvgInventory))
 }
-
-
 
 
 ## ==== 3. Nestedness analysis ====
