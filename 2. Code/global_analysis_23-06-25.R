@@ -104,8 +104,9 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   ### C. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
   
-  # Create directory
+  # Create directories
   dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id))
+  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id))
   
   ### D. Initialize simulated matrices dataset ----
   df_simulated <- data.frame(
@@ -130,9 +131,6 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       stat_nodf_general = numeric(),
       stat_temp = numeric(),
       stringsAsFactors = FALSE)
-    
-    # Directory for simulated matrices
-    dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_",matrix_id, "_", b))
     
     current_matrix <- matrix
     baseline_used <- b
@@ -175,8 +173,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       df_simulated_b <- rbind(df_simulated_b, row_sim)
       
       # Save simulated matrix
-      mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_", matrix_id, "_", b, "/simmat_", matrix_id, "_", b, "_", i, ".csv")
-      write.csv2(sim_i, mat_directory)
+      if (i == 1) {
+        mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
+        write.csv2(sim_i, mat_directory)
+      }
     }
     # Save nestedness results of simulated matrices for 1 baseline
     write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
