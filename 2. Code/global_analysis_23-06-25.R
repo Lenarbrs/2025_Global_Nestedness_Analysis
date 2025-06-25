@@ -190,18 +190,31 @@ mat_example <- matrix(c(
   0, 1, 0, 1
 ), nrow = 5, byrow = TRUE)
 
-nestedness_analysis(mat_example, "test1", N_ITER_)
+nestedness_analysis(mat_example, "test1", N_ITER_ = 10)
 
-# Sanity check
-nullmodel_mat <- nullmodel(x = mat_example, method = "r00")
-print("nullmodel matrix")
-print(nullmodel_mat)
-simulated_mat <- simulate(object = nullmodel_mat, nsim = 10)
-print("simulated matrix object")
-print(simulated_mat)
-for (i in 1:dim(simulated_mat)[3]) {
-  sim_i <- simulated_mat[, , i]
-  print("Simulated matrix ", i)
-  print(sim_i)
-  }
+## ==== 5. Apply function to real matrices ====
+# Set folder path
+folder_path <- "Matrices examples simulated"
+# List all CSV files in the folder
+file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Loop through each file
+for (file_path in file_list) {
+  
+  ### A. Clean file name for matrix Id ----
+  base_name <- basename(file_path)
+  base_name <- sub("\\.csv$", "", base_name)
+  # Step-by-step name cleaning
+  cleaned_name <- base_name
+  cleaned_name <- sub("^cleaned_", "", cleaned_name)   # Remove "cleaned_" at start
+  cleaned_name <- sub("^bin_", "", cleaned_name)       # Remove "bin_" at start
+  cleaned_name <- sub("^matrix_", "", cleaned_name)    # Remove "matrix_" at start
+  cleaned_name <- sub("_bin$", "", cleaned_name)       # Remove "_bin" at end
+  
+  ### B. Analyse matrix with main function ----
+  matrix_data <- as.matrix(read.csv(file_path, header = FALSE))
+  nestedness_analysis(matrix_data, cleaned_name, N_ITER_)
+}
+
+
 
