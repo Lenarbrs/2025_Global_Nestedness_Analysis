@@ -251,7 +251,6 @@ for (size in matrix_sizes) {
 }
 
 ## ==== 5. Visualisation ====
-
 ggplot(results, aes(x = size, y = time)) +
   geom_point(aes(size = fill), color = "darkblue", alpha = 0.8) +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
