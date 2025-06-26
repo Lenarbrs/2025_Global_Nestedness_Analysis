@@ -198,9 +198,9 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 ### A.  Define matrix sizes ----
 # These sizes are more or less the same as the matrices we have in our data
 matrix_sizes <- list(
-  c(4, 30), c(12, 10), c(5, 40), c(40, 30),
-  c(35, 50), c(100, 150), c(100,50), c(70, 80), 
-  c(60,50), c(90,40)
+  c(4, 30), c(12, 10), c(5, 40), c(40, 30), c(40, 180)
+  c(35, 50), c(100,50), c(70, 80), c(40, 140),
+  c(60,50), c(90,40), c(30,220), c(170, 40), c(30, 350)
 )
 
 ### B.  Generate random binary matrix with target fill ----
@@ -249,7 +249,6 @@ for (size in matrix_sizes) {
     time = elapsed
   ))
 }
-
 write.csv2(results, "rapidity_results.csv")
 
 ## ==== 5. Visualisation ====
@@ -265,5 +264,5 @@ p <- ggplot(results, aes(x = size, y = time)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5))
-
-
+p
+ggsave("execution_time_vs_matrix_size.png", plot = p, width = 8, height = 6, dpi = 300)
