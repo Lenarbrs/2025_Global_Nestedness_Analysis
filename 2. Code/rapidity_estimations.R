@@ -123,8 +123,8 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       nodf_general_stat = numeric(),
       temp_stat = numeric(),
       stringsAsFactors = FALSE)
-    # Directory for simulated matrices
-    dir.create(paste0("simmat_",matrix_id, "_", b))
+    # # Directory for simulated matrices
+    # dir.create(paste0("simmat_",matrix_id, "_", b))
     # Choose the right matrix and baseline
     current_matrix <- matrix
     baseline_used <- b
