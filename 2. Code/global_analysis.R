@@ -9,175 +9,193 @@ library(vegan)
 library(permute)
 library(lattice)
 
-## Parameters 
-
+## Parameters ----
 # set parallel options to the computer's number of cores minus 1
 options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations
 N_ITER_ <- 10
 
+
 ## ==== 2. Functions ====
 
 ### ---- A. Compute correlation ----
 compute_cor_coef <- function(matrix) {
+  # Compute the total number of items each row (agent) holds
+  row_totals <- rowSums(matrix)
+  # For each item (i.e. each column), 
+  # calculate the average inventory size of agents who hold it
   avg_inventory <- apply(matrix, 2, function(item_col) {
-    mean(rowSums(matrix)[item_col == 1])})
-  
+    # Select the row totals only for agents who have this item 
+    # (i.e. where item_col == 1)
+    selected <- row_totals[item_col == 1]
+    # If no agent has the item, return NA to avoid mean(numeric(0)) = NaN
+    if (length(selected) == 0) {
+      return(NA_real_)
+    } else {
+      # Otherwise, return the average inventory size of agents who have the item
+      return(mean(selected))
+    }} )
+  # Create a data frame with two statistics per item:
+  # - Prevalence: how many agents have the item (column sum)
+  # - AvgInventory: average inventory size of those agents
   item_stats <- data.frame(
     Prevalence = colSums(matrix),
     AvgInventory = avg_inventory
   )
+  # If any NA exists in Prevalence or AvgInventory, 
+  # correlation can't be computed
+  if (anyNA(item_stats)) {
+    return(NA_real_)
+  }
+  # Compute the standard deviations to check for constant vectors
+  sd_prev <- sd(item_stats$Prevalence, na.rm = TRUE)
+  sd_avginv <- sd(item_stats$AvgInventory, na.rm = TRUE)
+  # If either standard deviation is NA (shouldn’t happen now) or equal to 0, 
+  # correlation is undefined
+  if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
+    return(NA_real_)
+  }
+  # Return the Pearson correlation between Prevalence and AvgInventory
   return(cor(item_stats$Prevalence, item_stats$AvgInventory))
 }
+
 
 ## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
-  ### ---- A. Parameters list ----
-  baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
-  metrics   <- c("NODF", "Temp")
-  
-  ### ---- B. Initialize empty dataframe ----
-  for (met in metrics) {
-  df_metric <- data.frame(
-    matrix_id = character(),
-    num_rows = integer(),
-    num_columns = integer(),
-    cor_coef = numeric(),
-    metric = character(),
-    baseline = character(),
-    type = character(),
-    columns_value  = numeric(),
-    rows_value     = numeric(),
-    global_value   = numeric(),
-    p_value        = numeric()
-  )
-  
-  ### ---- C. Coefficient of correlation ----
+  ### A. Calculate real matrix nestedness properties ----
+  # Size and Fill
+  num_elements <- nrow(matrix)*ncol(matrix)
+  num_ones <- sum(matrix == 1)
+  fill_percentage <- (num_ones / num_elements) * 100
+  # Coefficient of correlation
   cor_coef <- compute_cor_coef(matrix)
+  # Nestedness scores
+  temp_real_matrix <- nestedtemp(matrix)
+  nodf_real_matrix <- nestednodf(matrix,
+                                 order = TRUE, 
+                                 weighted = FALSE, 
+                                 wbinary = FALSE)
+  # Extract statistics
+  temp_stat <- as.numeric(temp_real_matrix$statistic)
+  nodf_col_stat <- as.numeric(nodf_real_matrix$statistic[1])
+  nodf_row_stat <- as.numeric(nodf_real_matrix$statistic[2])
+  nodf_gen_stat <- as.numeric(nodf_real_matrix$statistic[3])
   
-  ### ---- D. Append dataframe ----
-    for (b in baselines) {
-    ### ---- D1. Prepare matrix & method ----
+  ### B. Summary dataset ----
+  df_summary <- data.frame(
+    matrix_id = matrix_id,
+    num_rows = nrow(matrix),
+    num_columns = ncol(matrix),
+    size = num_elements,
+    fill = fill_percentage,
+    cor_coef = cor_coef,
+    nodf_columns_stat = nodf_col_stat,
+    nodf_rows_stat = nodf_row_stat,
+    nodf_general_stat = nodf_gen_stat,
+    temp_stat = temp_stat,
+    stringsAsFactors = FALSE
+  )
+  write.csv2(df_summary, paste0("nest_summary_", matrix_id, ".csv"), 
+             row.names = FALSE)
+  
+  ### C. Parameters list ----
+  baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
+  
+  ### D. Initialize simulated matrices dataset ----
+  df_simulated <- data.frame(
+    matrix_id = character(),
+    baseline = character(),
+    ceof_cor = numeric(),
+    nodf_columns_stat = numeric(),
+    nodf_rows_stat = numeric(),
+    nodf_general_stat = numeric(),
+    temp_stat = numeric(),
+    stringsAsFactors = FALSE)
+  
+  ### E. Simulated matrices dataset ----
+  for (b in baselines) {
+    # For sanity saves purpose
+    df_simulated_b <- data.frame(
+      matrix_id = character(),
+      baseline = character(),
+      ceof_cor = numeric(),
+      nodf_columns_stat = numeric(),
+      nodf_rows_stat = numeric(),
+      nodf_general_stat = numeric(),
+      temp_stat = numeric(),
+      stringsAsFactors = FALSE)
+    # Directory for simulated matrices
+    dir.create(paste0("simmat_",matrix_id, "_", b))
+    # Choose the right matrix and baseline
     current_matrix <- matrix
     baseline_used <- b
-    # Create the c1 baseline
-    if (b == 'c1') { 
+    # c1 special treatment
+    if (b == 'c1') {
+      # Inverse the matrix
       current_matrix <- t(matrix)
-      baseline_used <- 'r1' 
-    } 
-    # Choose the metric
-    if (met == "NODF") {
-      nestfun  <- nestednodf
-      stat_idx <- 3    # global NODF
-    } else {
-      nestfun  <- nestedtemp
-      stat_idx <- 1    # Temperature
+      # Use r1
+      baseline_used <- 'r1'
     }
-    
-    ### ---- D2. Run oecosimu ----
-    res <- oecosimu(
-      comm  = current_matrix,
-      nestfun = nestfun,
-      method = baseline_used,
-      alternative = "two.sided",
-      nsimul = N_ITER_,
-      batchsize = 50,
-      parallel = TRUE
-    )
-    
-    ## Statistics
-    # Nestedness value of the real matrix
-    stat_val <- res$statistic$statistic   
-    # p-value
-    pval <- res$oecosimu$pval[stat_idx]
-    
-    ### ---- E1. Simulated rows ----
-    
-    # For NODF
-    if (met == "NODF") {
-    sim_mat <- as.data.frame(t(res$oecosimu$simulated))
-    colnames(sim_mat) <- c("columns_value",
-                          "rows_value",
-                          "global_value")
-    } else {
-      sim_mat <- data.frame(
-        columns_value = NA,
-        rows_value    = NA,
-        global_value  = as.numeric(res$oecosimu$simulated)
-      )
-    }
-    
-    new_sim <- data.frame(
-      matrix_id = rep(matrix_id, N_ITER_),
-      num_rows = rep(nrow(matrix), N_ITER_),
-      num_columns = rep(ncol(matrix), N_ITER_),
-      cor_coef = rep(cor_coef, N_ITER_),
-      metric = rep(met , N_ITER_),
-      baseline = rep(b, N_ITER_),
-      type  = rep("simulated", N_ITER_),
-      columns_value = sim_mat$columns_value,
-      rows_value = sim_mat$rows_value,
-      global_value = sim_mat$global_value,
-      p_value = rep(pval, N_ITER_),
-      stringsAsFactors = FALSE
-    )
-    
-    ### ---- E2. Real rows ----
-    
-    # For NODF
-    if (met == "NODF") {
-    new_real <- data.frame(
-      matrix_id  = matrix_id,
-      num_rows = nrow(matrix),
-      num_columns = ncol(matrix),
-      cor_coef = cor_coef,
-      metric = met,
-      baseline = b,
-      type   = "real",
-      columns_value = stat_val[1],
-      rows_value= stat_val[2],
-      global_value = stat_val[3],
-      p_value = pval,
-      stringsAsFactors = FALSE
-    )
-    print(res$oecosimu$simulated)
-    print(res$statistic)
-    
-    # For Temperature
-    } else {
-      new_real <- data.frame(
+    # Simulate matrices
+    nullmodel_mat <- nullmodel(x = current_matrix, 
+                               method = baseline_used)
+    simulated_mat <- simulate(object = nullmodel_mat, 
+                              nsim = N_ITER_)
+    # We keep the same 1,000 matrices per baseline for temp and nodf
+    for (i in 1:dim(simulated_mat)[3]) {
+      sim_i <- simulated_mat[, , i]
+      
+      ### F. Calculate simulated matrices nestedness properties ----
+      # Coefficient of correlation
+      cor_coef_sim <- compute_cor_coef(sim_i)
+      # Nestedness scores
+      temp_sim_matrix <- nestedtemp(sim_i)
+      nodf_sim_matrix <- nestednodf(sim_i, 
+                                    order = TRUE, 
+                                    weighted = FALSE, 
+                                    wbinary = FALSE)
+      # Extract statistics
+      temp_stat <- as.numeric(temp_sim_matrix$statistic)
+      nodf_col_stat <- as.numeric(nodf_sim_matrix$statistic[1])
+      nodf_row_stat <- as.numeric(nodf_sim_matrix$statistic[2])
+      nodf_gen_stat <- as.numeric(nodf_sim_matrix$statistic[3])
+      
+      ### G. Unite results and append dataframes ----
+      row_sim <- data.frame(
         matrix_id = matrix_id,
-        num_rows  = nrow(matrix),
-        num_columns = ncol(matrix),
-        cor_coef = cor_coef,
-        metric = met,
         baseline = b,
-        type = "real",
-        columns_value = NA,
-        rows_value = NA,
-        global_value  = stat_val[1],
-        p_value = pval,
-        stringsAsFactors = FALSE
-      )
+        ceof_cor = cor_coef_sim,
+        nodf_columns_stat = nodf_col_stat,
+        nodf_rows_stat = nodf_row_stat,
+        nodf_general_stat = nodf_gen_stat,
+        temp_stat = temp_stat,
+        stringsAsFactors = FALSE)
+      # append results
+      df_simulated <- rbind(df_simulated, row_sim)
+      df_simulated_b <- rbind(df_simulated_b, row_sim)
+      
+      # Save simulated matrix
+      mat_directory <- paste0("simmat_", 
+                              matrix_id, "_", b, 
+                              "/simmat_", matrix_id, 
+                              "_", b, "_", i, ".csv")
+      write.csv2(sim_i, mat_directory)
     }
-    
-    ### ---- F. Final Dataframe  ----
-    df_metric <- bind_rows(df_metric, new_sim, new_real)
-    
-    ### ---- G. After every baselines for this metric: write a csv ----
-    # write.csv(
-    #   df_metric,
-    #   paste0("analysis_nestedness_", matrix_id, "_", met, ".csv"),
-    #   row.names = FALSE)
-   }
+    # Save nestedness results of simulated matrices for 1 baseline
+    write.csv2(df_simulated_b, paste0("nest_simulated_", 
+                                      matrix_id, "_", b, ".csv"), 
+               row.names = FALSE)
   }
+  
+  ### H. Save nestedness results of simulated matrices for all baselines ----
+  write.csv2(df_simulated, paste0("nest_simulated_", 
+                                  matrix_id, "_all.csv"), 
+             row.names = FALSE)
 }
 
 
-
-## Example 
-
+## ==== 4. Test ====
 mat_example <- matrix(c(
   1, 1, 1, 1,
   1, 1, 0, 0,
@@ -187,3 +205,37 @@ mat_example <- matrix(c(
 ), nrow = 5, byrow = TRUE)
 
 nestedness_analysis(mat_example, "test1", N_ITER_)
+
+## ==== 5. Apply function to real matrices ====
+
+# # Set folder path
+# folder_path <- "Matrices examples simulated"
+# # List all CSV files in the folder
+# file_list <- list.files(path = folder_path, 
+#                         pattern = "\\.csv$", 
+#                         full.names = TRUE)
+# 
+# # Loop through each file
+# for (file_path in file_list) {
+#   
+#   ### A. Clean file name for matrix Id ----
+#   base_name <- basename(file_path)
+#   base_name <- sub("\\.csv$", "", base_name)
+#   # Step-by-step name cleaning
+#   cleaned_name <- base_name
+#   cleaned_name <- sub("^cleaned_", "", 
+#                       cleaned_name)   # Remove "cleaned_" at start
+#   cleaned_name <- sub("^bin_", "", 
+#                       cleaned_name)   # Remove "bin_" at start
+#   cleaned_name <- sub("^matrix_", "", 
+#                       cleaned_name)   # Remove "matrix_" at start
+#   cleaned_name <- sub("_bin$", "", 
+#                       cleaned_name)   # Remove "_bin" at end
+#   
+#   ### B. Analyse matrix with main function ----
+#   matrix_data <- as.matrix(read.csv(file_path, header = FALSE))
+#   nestedness_analysis(matrix_data, cleaned_name, N_ITER_)
+# }
+# 
+# 
+# 
