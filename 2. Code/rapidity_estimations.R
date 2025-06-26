@@ -13,7 +13,7 @@ library(lattice)
 # set parallel options to the computer's number of cores minus 1
 options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations
-N_ITER_ <- 10
+N_ITER_ <- 1000
 
 ## ==== 2. Function for Global analysis ====
 ### ---- A. Compute correlation ----
@@ -250,8 +250,10 @@ for (size in matrix_sizes) {
   ))
 }
 
+write.csv2(results, "rapidity_results.csv")
+
 ## ==== 5. Visualisation ====
-ggplot(results, aes(x = size, y = time)) +
+p <- ggplot(results, aes(x = size, y = time)) +
   geom_point(aes(size = fill), color = "darkblue", alpha = 0.8) +
   geom_smooth(method = "lm", formula = y ~ x, se = TRUE, color = "red") +
   labs(title = "Execution time vs Matrix size",
@@ -263,4 +265,5 @@ ggplot(results, aes(x = size, y = time)) +
   theme_minimal() +
   theme(plot.title = element_text(hjust = 0.5),
         plot.subtitle = element_text(hjust = 0.5))
+
 
