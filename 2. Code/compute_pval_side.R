@@ -1,65 +1,76 @@
 # ======== Boostrapped p-value calculation ========
 
-library(tidyverse)
+library(tidyverse)  # Load tidyverse for data manipulation
 
-# Charger les données
+# Load simulated statistics
 sims <- read_csv2("nest_simulated_mat_example_2_all.csv", show_col_types = FALSE)
+
+# Load observed statistics and rename columns
 reals <- read_csv2("nest_summary_mat_example_2.csv", show_col_types = FALSE) %>%
   select(
     matrix_id,
-    obs_NODF = stat_nodf_general,
-    obs_Temp = stat_temp
+    obs_NODF = stat_nodf_general,  # Observed nestedness
+    obs_Temp = stat_temp           # Observed temperature
   )
 
-# Fonction de calcul de p-value bilatérale
+# Function to compute two-tailed (bilateral) p-value
 compute_pval <- function(obs, sims) {
-  n_total <- length(sims)
-  n_greater <- sum(sims >= obs, na.rm = TRUE)
-  n_lesser <- sum(sims <= obs, na.rm = TRUE)
-  p_value <- min(n_greater, n_lesser) / n_total
-  return(min(p_value, 1))  # Cap at 1
+  n_total <- length(sims)                          # Total number of simulations
+  n_greater <- sum(sims > obs) + sum(sims == obs)/2     # Number of simulations >= observed
+  n_lesser <- sum(sims < obs) + sum(sims == obs)/2     # Number of simulations <= observed
+  p_value <- min(n_greater, n_lesser) / n_total    # Take the more extreme side
+  #return(min(p_value, 1))                          # Ensure p-value does not exceed 1
+  print(n_total)
+  print(n_greater)
+  print(n_lesser)
+  print(p_value)
+  return(p_value)
 }
 
-# Calcul des résultats avec signe
+# Calculate p-values and direction (nested, antinested, equal)
 results <- reals %>%
-  expand_grid(baseline = unique(sims$baseline)) %>%
-  left_join(sims, by = c("matrix_id", "baseline")) %>%
+  expand_grid(baseline = unique(sims$baseline)) %>%     # Ensure all baseline x matrix_id combinations
+  left_join(sims, by = c("matrix_id", "baseline")) %>%  # Merge with simulated data
   group_by(matrix_id, baseline) %>%
   summarise(
-    # P-values
+    # Compute two-tailed p-values for both statistics
     p_NODF = compute_pval(first(obs_NODF), stat_nodf_general),
     p_Temp = compute_pval(first(obs_Temp), stat_temp),
     
-    # Sign determination
+    # Compute simulation means for comparison
     mean_sim_NODF = mean(stat_nodf_general, na.rm = TRUE),
     mean_sim_Temp = mean(stat_temp, na.rm = TRUE),
+    
+    # Keep the observed values for reference
     obs_NODF = first(obs_NODF),
     obs_Temp = first(obs_Temp),
     
     .groups = "drop"
   ) %>%
   mutate(
-    # Determine nestedness direction with significance
+    # Determine significance direction for NODF
     sign_NODF = case_when(
       obs_NODF > mean_sim_NODF ~ "nested",
       obs_NODF < mean_sim_NODF ~ "antinested",
       TRUE ~ "equal"
     ),
     
+    # Determine significance direction for Temp (inverse logic)
     sign_Temp = case_when(
-      obs_Temp < mean_sim_Temp ~ "nested",
-      obs_Temp > mean_sim_Temp ~ "antinested",
+      obs_Temp < mean_sim_Temp ~ "nested",      # Lower temperature → more nested
+      obs_Temp > mean_sim_Temp ~ "antinested",  # Higher temperature → less nested
       TRUE ~ "equal"
     )
   ) %>%
+  # Remove raw mean and observed values, keep only p-values and signs
   select(-starts_with("mean_sim_"), -starts_with("obs_"))
 
-# Formatage des p-values
+# Format p-values to 4 decimal places
 final_results <- results %>%
   mutate(across(c(p_NODF, p_Temp), ~sprintf("%.4f", .x)))
 
-# Export des résultats
+# Export results to CSV (commented out)
 # write_csv(final_results, "nestedness_results_with_significance.csv")
 
-# Affichage
+# Display full results
 print(final_results, n = Inf)
