@@ -3,10 +3,10 @@
 library(tidyverse)  # Load tidyverse for data manipulation
 
 # Load simulated statistics
-sims <- read_csv2("nest_simulated_mat_example_2_all.csv", show_col_types = FALSE)
+sims <- read_csv2("nest_simulated_mat_example_3_all.csv", show_col_types = FALSE)
 
 # Load observed statistics and rename columns
-reals <- read_csv2("nest_summary_mat_example_2.csv", show_col_types = FALSE) %>%
+reals <- read_csv2("nest_summary_mat_example_3.csv", show_col_types = FALSE) %>%
   select(
     matrix_id,
     obs_NODF = stat_nodf_general,  # Observed nestedness
@@ -16,15 +16,10 @@ reals <- read_csv2("nest_summary_mat_example_2.csv", show_col_types = FALSE) %>%
 # Function to compute two-tailed (bilateral) p-value
 compute_pval <- function(obs, sims) {
   n_total <- length(sims)                          # Total number of simulations
-  n_greater <- sum(sims > obs) + sum(sims == obs)/2     # Number of simulations >= observed
-  n_lesser <- sum(sims < obs) + sum(sims == obs)/2     # Number of simulations <= observed
-  p_value <- min(n_greater, n_lesser) / n_total    # Take the more extreme side
-  #return(min(p_value, 1))                          # Ensure p-value does not exceed 1
-  print(n_total)
-  print(n_greater)
-  print(n_lesser)
-  print(p_value)
-  return(p_value)
+  n_greater <- sum(sims >= obs)     # Number of simulations >= observed
+  n_lesser <- sum(sims <= obs)     # Number of simulations <= observed
+  p_value <- 2 * min(n_greater, n_lesser) / n_total    # Take the more extreme side
+  return(min(p_value, 1))                          # Ensure p-value does not exceed 1
 }
 
 # Calculate p-values and direction (nested, antinested, equal)
@@ -38,8 +33,8 @@ results <- reals %>%
     p_Temp = compute_pval(first(obs_Temp), stat_temp),
     
     # Compute simulation means for comparison
-    mean_sim_NODF = mean(stat_nodf_general, na.rm = TRUE),
-    mean_sim_Temp = mean(stat_temp, na.rm = TRUE),
+    mean_sim_NODF = median(stat_nodf_general, na.rm = TRUE),
+    mean_sim_Temp = median(stat_temp, na.rm = TRUE),
     
     # Keep the observed values for reference
     obs_NODF = first(obs_NODF),
