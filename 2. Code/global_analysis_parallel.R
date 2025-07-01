@@ -2,13 +2,17 @@
 # Re analysis of nestedness in empirical matrices ----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 ## ==== 1. Library import ====
 library(tidyverse)
 library(progress)
 library(vegan)
 library(permute)
 library(lattice)
-library(parallel)  # Added for parallel processing
+library(parallel)
+library(data.table)
+library(foreach)
+library(doParallel)
 
 ### Parameters ----
 # Set parallel options
@@ -59,17 +63,16 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   fill_percentage <- (num_ones / num_elements) * 100
   cor_coef <- compute_cor_coef(matrix)
   
-  # Calculate nestedness metrics in parallel
-  metrics <- mclapply(list(matrix), function(m) {
-    temp_real_matrix <- nestedtemp(m)
-    nodf_real_matrix <- nestednodf(m, order = TRUE, weighted = FALSE, wbinary = FALSE)
-    list(
-      temp_stat = as.numeric(temp_real_matrix$statistic),
-      nodf_col_stat = as.numeric(nodf_real_matrix$statistic[1]),
-      nodf_row_stat = as.numeric(nodf_real_matrix$statistic[2]),
-      nodf_gen_stat = as.numeric(nodf_real_matrix$statistic[3])
-    )
-  })[[1]]
+  # Calculate nestedness metrics
+  temp_real_matrix <- nestedtemp(matrix)
+  nodf_real_matrix <- nestednodf(matrix, order = TRUE, weighted = FALSE, wbinary = FALSE)
+  
+  metrics <- list(
+    temp_stat = as.numeric(temp_real_matrix$statistic),
+    nodf_col_stat = as.numeric(nodf_real_matrix$statistic[1]),
+    nodf_row_stat = as.numeric(nodf_real_matrix$statistic[2]),
+    nodf_gen_stat = as.numeric(nodf_real_matrix$statistic[3])
+  )
   
   ### B. Summary dataset ----
   df_summary <- data.frame(
@@ -90,8 +93,8 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   ### C. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2', 'c0', 'c1', 'curveball', 'swap')
   
-  ### D. Parallel processing of baselines ----
-  df_simulated_list <- mclapply(baselines, function(b) {
+  ### D. Process baselines sequentially ----
+  df_simulated_list <- lapply(baselines, function(b) {
     current_matrix <- matrix
     baseline_used <- b
     if (b == 'c1') {
@@ -155,3 +158,46 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   write.csv2(df_simulated, paste0("nestedness_", matrix_id, "/nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
 }
 
+
+## ==== 5. Apply function to real matrices (cross-platform optimized) ====
+
+# Set folder path
+folder_path <- "Matrices examples simulated"
+# List all CSV files in the folder
+file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+# Precompute cleaned names using step-by-step cleaning
+cleaned_names <- basename(file_list) %>%
+  gsub("\\.csv$", "", .) %>%       # Remove .csv extension
+  gsub("^cleaned_", "", .) %>%     # Remove "cleaned_" prefix
+  gsub("^bin_", "", .) %>%         # Remove "bin_" prefix
+  gsub("^matrix_", "", .) %>%      # Remove "matrix_" prefix
+  gsub("_bin$", "", .)             # Remove "_bin" suffix
+
+# Set up parallel backend
+n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system
+cl <- makeCluster(n_cores)
+registerDoParallel(cl)
+
+# Export required functions to cluster
+clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_"))
+
+# Process matrices in parallel
+results <- foreach(i = seq_along(file_list), .packages = c("data.table", "vegan", "permute")) %dopar% {
+  file_path <- file_list[i]
+  matrix_id <- cleaned_names[i]
+  
+  # Fast matrix reading
+  matrix_data <- as.matrix(fread(file_path, header = FALSE))
+  
+  # Run analysis
+  nestedness_analysis(matrix_data, matrix_id, N_ITER_)
+  
+  return(matrix_id)
+}
+
+# Stop cluster
+stopCluster(cl)
+
+# Print completion message
+cat("Successfully processed", length(file_list), "matrices\n")
