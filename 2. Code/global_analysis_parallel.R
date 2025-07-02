@@ -17,8 +17,6 @@ library(foreach)      # For parallel looping constructs
 library(doParallel)   # For parallel backend implementation
 
 ### ---- B. Parameters ----
-# Set parallel options to use all available cores except one
-options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations to run for each null model
 N_ITER_ <- 10
 
@@ -95,16 +93,8 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   )
   write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
   
-  ### ---- C. Define parameters for progress bar ----
+  ### ---- C. Define baselines ----
   baselines <- c('r00', 'r0', 'r1', 'r2', 'c0', 'c1', 'curveball', 'swap')
-  # Progress bar initialization
-  total_iter <- length(baselines) * 1000 # number of simulations
-  pb <- progress_bar$new(
-    format = "[:bar] :percent | ETA: :eta | Elapsed: :elapsedfull",
-    total = total_iter,
-    clear = FALSE,
-    width = 100
-  )
   
   ### ---- D. Process baselines sequentially ----
   # For each null model baseline:
@@ -147,8 +137,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
         # Return NAs if calculation fails
         list(temp_stat = NA_real_, nodf_col_stat = NA_real_, nodf_row_stat = NA_real_, nodf_gen_stat = NA_real_)
       })
-      # Progress bar update
-      pb$tick()
+      
       # Create results row for this simulation
       data.frame(
         matrix_id = matrix_id,
@@ -179,9 +168,9 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 }
 
 
-## ==== 5. Apply function to real matrices (cross-platform optimized) ====
+## ==== 5. Apply function to real matrices (with progress tracking) ====
 
-# Set folder path containing matrices
+# Set folder path
 folder_path <- "Matrices examples simulated"
 # List all CSV files in the folder
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
@@ -194,34 +183,86 @@ cleaned_names <- basename(file_list) %>%  # Extract filenames without path
   gsub("^matrix_", "", .) %>%      # Remove "matrix_" prefix
   gsub("_bin$", "", .)             # Remove "_bin" suffix
 
+# Set up progress log file
+log_file <- "matrix_processing.log"
+cat("=== Matrix Processing Log ===\n", file = log_file)
+cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n", file = log_file, append = TRUE)
+
 # Set up parallel backend
 n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
-cl <- makeCluster(n_cores)             # Create cluster object
-registerDoParallel(cl)                 # Register parallel backend
+cl <- makeCluster(n_cores)
+registerDoParallel(cl)
 
-# Export required functions and variables to cluster workers
-clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_"))
+# Export required functions to cluster
+clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_", "log_file"))
 
-# Process matrices in parallel
+# Process matrices in parallel with progress tracking
 results <- foreach(
   i = seq_along(file_list), 
-  .packages = c("data.table", "vegan", "permute")  # Packages needed on workers
+  .packages = c("data.table", "vegan", "permute"),
+  .errorhandling = "pass"  # Continue processing even if some fail
 ) %dopar% {
   file_path <- file_list[i]
   matrix_id <- cleaned_names[i]
   
-  # Fast matrix reading using data.table's fread
-  matrix_data <- as.matrix(fread(file_path, header = FALSE))
+  # Log start of processing
+  start_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"), 
+                      " STARTED matrix: ", matrix_id, 
+                      " (", i, "/", length(file_list), ")")
+  cat(start_msg, "\n", file = log_file, append = TRUE)
   
-  # Perform nestedness analysis
-  nestedness_analysis(matrix_data, matrix_id, N_ITER_)
-  
-  # Return processed matrix ID for tracking
-  return(matrix_id)
+  tryCatch({
+    # Fast matrix reading
+    matrix_data <- as.matrix(fread(file_path, header = FALSE))
+    
+    # Log matrix dimensions
+    dim_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                      " SIZE: ", nrow(matrix_data), "x", ncol(matrix_data),
+                      " (", round(object.size(matrix_data)/1024^2, 2), " MB)")
+    cat(dim_msg, "\n", file = log_file, append = TRUE)
+    
+    # Run analysis
+    nestedness_analysis(matrix_data, matrix_id, N_ITER_)
+    
+    # Log successful completion
+    success_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                          " COMPLETED matrix: ", matrix_id)
+    cat(success_msg, "\n", file = log_file, append = TRUE)
+    
+    return(list(matrix_id = matrix_id, status = "success"))
+  }, error = function(e) {
+    # Log error details
+    error_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                        " ERROR in matrix: ", matrix_id,
+                        " - ", conditionMessage(e))
+    cat(error_msg, "\n", file = log_file, append = TRUE)
+    return(list(matrix_id = matrix_id, status = "error", error = conditionMessage(e)))
+  })
 }
 
-# Cleanup: Stop cluster after processing
+# Stop cluster
 stopCluster(cl)
 
-# Print completion message
-cat("Successfully processed", length(file_list), "matrices\n")
+# Final log summary
+success_count <- sum(sapply(results, function(x) x$status == "success"))
+error_count <- length(file_list) - success_count
+
+cat("\n=== Processing Summary ===\n", file = log_file, append = TRUE)
+cat("Finished at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
+cat("Total matrices:", length(file_list), "\n", file = log_file, append = TRUE)
+cat("Successfully processed:", success_count, "\n", file = log_file, append = TRUE)
+cat("Failed:", error_count, "\n", file = log_file, append = TRUE)
+
+# Print completion message to console
+cat("\nProcessing complete. Success:", success_count, "Errors:", error_count, "\n")
+cat("See detailed log in:", log_file, "\n")
+
+# Print error details to console if any
+if (error_count > 0) {
+  cat("\n=== Error Details ===\n")
+  errors <- results[sapply(results, function(x) x$status == "error")]
+  for (e in errors) {
+    cat("Matrix:", e$matrix_id, "\n")
+    cat("Error:", e$error, "\n\n")
+  }
+}
