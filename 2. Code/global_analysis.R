@@ -9,16 +9,11 @@ library(vegan)
 library(permute)
 library(lattice)
 
-## Parameters ----
-# set parallel options to the computer's number of cores minus 1
-options(mc.cores = max(1, parallel::detectCores() - 1))
+## ---- Parameters ----
 # Number of simulations
 N_ITER_ <- 10
 
-
-## ==== 2. Functions ====
-
-### ---- A. Compute correlation ----
+## ---- Compute correlation function ----
 compute_cor_coef <- function(matrix) {
   # Compute the total number of items each row (agent) holds
   row_totals <- rowSums(matrix)
@@ -176,11 +171,13 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       df_simulated_b <- rbind(df_simulated_b, row_sim)
       
       # Save simulated matrix
-      mat_directory <- paste0("simmat_", 
-                              matrix_id, "_", b, 
-                              "/simmat_", matrix_id, 
-                              "_", b, "_", i, ".csv")
-      write.csv2(sim_i, mat_directory)
+      if (i == 1) {
+        mat_directory <- paste0("nestedness_", matrix_id, 
+                                "/sim_", matrix_id, 
+                                "/simmat_examples_", matrix_id, 
+                                "/example_simmat_", matrix_id, "_", b, ".csv")
+        write.csv2(sim_i, mat_directory)
+      }
     }
     # Save nestedness results of simulated matrices for 1 baseline
     write.csv2(df_simulated_b, paste0("nest_simulated_", 
