@@ -13,7 +13,7 @@ library(lattice)
 # set parallel options to the computer's number of cores minus 1
 options(mc.cores = max(1, parallel::detectCores() - 1))
 # Number of simulations
-N_ITER_ <- 10
+N_ITER_ <- 1000
 
 
 ## ==== 2. Functions ====
@@ -66,10 +66,12 @@ compute_cor_coef <- function(matrix) {
 ## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 
-  # Create general directory
+  ### A. Create general directory ----
   dir.create(paste0("nestedness_", matrix_id))
+  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id))
+  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id))
   
-  ### A. Calculate real matrix nestedness properties ----
+  ### B. Calculate real matrix nestedness properties ----
   # Size and Fill
   num_elements <- nrow(matrix)*ncol(matrix)
   num_ones <- sum(matrix == 1)
@@ -85,7 +87,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   nodf_row_stat <- as.numeric(nodf_real_matrix$statistic[2])
   nodf_gen_stat <- as.numeric(nodf_real_matrix$statistic[3])
   
-  ### B. Summary dataset ----
+  ### C. Summary dataset ----
   df_summary <- data.frame(
     matrix_id = matrix_id,
     num_rows = nrow(matrix),
@@ -101,20 +103,6 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   )
   write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
   
-  ### C. Parameters list ----
-  baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
-  # Progress bar
-  total_iter <- length(baselines) * 1000 # number of simulations
-  pb <- progress_bar$new(
-   format = "[:bar] :percent | ETA: :eta | Elapsed: :elapsedfull",
-   total = total_iter,
-   clear = FALSE,
-   width = 100
-   )
-  # Create directories
-  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id))
-  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id))
-  
   ### D. Initialize simulated matrices dataset ----
   df_simulated <- data.frame(
     matrix_id = character(),
@@ -126,8 +114,31 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     stat_temp = numeric(),
     stringsAsFactors = FALSE)
   
-  ### E. Simulated matrices dataset ----
+  ### E. Parameters list ----
+  baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
+  # Progress bar
+  total_iter <- length(baselines) * 1000 # number of simulations
+  pb <- progress_bar$new(
+   format = "[:bar] :percent | ETA: :eta | Elapsed: :elapsedfull",
+   total = total_iter,
+   clear = FALSE,
+   width = 100
+   )
+  
+  ### F. Simulated matrices dataset ----
   for (b in baselines) {
+    # assess data for simulations
+    current_matrix <- matrix
+    baseline_used <- b
+    # c1 special treatment
+    if (b == 'c1') {
+      current_matrix <- t(matrix)
+      baseline_used <- 'r1'
+      }
+    # Simulate matrices with baseline
+    nullmodel_mat <- nullmodel(x = current_matrix, method = baseline_used)
+    simulated_mat <- simulate(object = nullmodel_mat, nsim = N_ITER_)
+    
     # For sanity saves purpose
     df_simulated_b <- data.frame(
       matrix_id = character(),
@@ -138,22 +149,11 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       stat_nodf_general = numeric(),
       stat_temp = numeric(),
       stringsAsFactors = FALSE)
-    
-    current_matrix <- matrix
-    baseline_used <- b
-    # c1 special treatment
-    if (b == 'c1') {
-      current_matrix <- t(matrix)
-      baseline_used <- 'r1'
-      }
-    # Simulate matrices
-    nullmodel_mat <- nullmodel(x = current_matrix, method = baseline_used)
-    simulated_mat <- simulate(object = nullmodel_mat, nsim = N_ITER_)
-    
+    # Go through simulated matrices
     for (i in 1:dim(simulated_mat)[3]) {
       sim_i <- simulated_mat[, , i]
       
-      ### F. Calculate simulated matrices nestedness properties ----
+      ### G. Calculate simulated matrices nestedness properties ----
       # Coefficient of correlation
       cor_coef_sim <- compute_cor_coef(sim_i)
       # Nestedness scores
@@ -165,7 +165,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       nodf_row_stat <- as.numeric(nodf_sim_matrix$statistic[2])
       nodf_gen_stat <- as.numeric(nodf_sim_matrix$statistic[3])
       
-      ### G. Unite results and append dataframes ----
+      ### H. Unite results and append dataframes ----
       row_sim <- data.frame(
         matrix_id = matrix_id,
         baseline = b,
@@ -177,21 +177,21 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
         stringsAsFactors = FALSE)
       # append results
       df_simulated <- rbind(df_simulated, row_sim)
-      df_simulated_b <- rbind(df_simulated_b, row_sim)
+      df_simulated_b <- rbind(df_simulated_b, row_sim)*
+      # Progress bar update
+      pb$tick()
       
-      # Save simulated matrix
+      ### H. save results ----
+      # Save first simulated matrix
       if (i == 1) {
         mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
         write.csv2(sim_i, mat_directory)
       }
-      # Progress bar update
-      pb$tick()
     }
     # Save nestedness results of simulated matrices for 1 baseline
     write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
   }
-  
-  ### H. Save nestedness results of simulated matrices for all baselines ----
+  # Save nestedness results of simulated matrices for all baselines
   write.csv2(df_simulated, paste0("nestedness_", matrix_id, "/nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
 }
 
@@ -215,6 +215,7 @@ folder_path <- "Matrices examples simulated"
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
 
 # Loop through each file
+counter <- 0
 for (file_path in file_list) {
   
   ### A. Clean file name for matrix Id ----
@@ -229,8 +230,9 @@ for (file_path in file_list) {
   
   ### B. Analyse matrix with main function ----
   matrix_data <- as.matrix(read.csv(file_path, header = FALSE))
+  counter <- counter + 1
+  print(counter)
   print(cleaned_name)
-  print(matrix_data)
   nestedness_analysis(matrix_data, cleaned_name, N_ITER_)
 }
 
