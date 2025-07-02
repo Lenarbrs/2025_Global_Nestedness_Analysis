@@ -1,72 +1,77 @@
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Re analysis of nestedness in empirical matrices ----
+# ============== Re-analysis of nestedness in empirical matrices ===============
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-
-## ==== 1. Library import ====
+## ==== 1. General setup ====
+### ---- A. Library import ----
+# general use
 library(tidyverse)
-library(progress)
+# nestedness analysis
 library(vegan)
 library(permute)
 library(lattice)
-library(parallel)
-library(data.table)
-library(foreach)
-library(doParallel)
+# time optimisation
+library(parallel)     # For parallel computing capabilities
+library(data.table)   # For fast file I/O operations
+library(foreach)      # For parallel looping constructs
+library(doParallel)   # For parallel backend implementation
 
-### Parameters ----
-# Set parallel options
+### ---- B. Parameters ----
+# Set parallel options to use all available cores except one
 options(mc.cores = max(1, parallel::detectCores() - 1))
-# Number of simulations
+# Number of simulations to run for each null model
 N_ITER_ <- 10
 
-## ==== 2. Functions ====
-### ---- A. Optimized compute correlation ----
+### ---- C. Compute correlation function ----
 compute_cor_coef <- function(matrix) {
+  # Calculate inventory size for each cultural collection
   row_totals <- rowSums(matrix)
   non_zero <- matrix != 0
-  
+  # Pre-allocate vector for average inventory sizes
   avg_inventory <- numeric(ncol(matrix))
+  # Calculate average inventory size for each cultural type
   for (j in 1:ncol(matrix)) {
-    item_col <- non_zero[, j]
-    if (any(item_col)) {
-      avg_inventory[j] <- mean(row_totals[item_col])
+    type_col <- non_zero[, j]
+    if (any(type_col)) {
+      avg_inventory[j] <- mean(row_totals[type_col])
     } else {
+      # Handle case where no agent has the item
       avg_inventory[j] <- NA_real_
     }
   }
-  
+  # Calculate cultural type prevalence
   prevalence <- colSums(matrix)
+  
+  # Check if correlation can be computed
   valid <- !is.na(avg_inventory) & !is.na(prevalence)
-  
   if (sum(valid) < 2) return(NA_real_)
-  
   sd_prev <- sd(prevalence[valid])
   sd_avginv <- sd(avg_inventory[valid])
-  
   if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
     return(NA_real_)
   }
   
+  # Compute and return Pearson correlation
   cor(prevalence[valid], avg_inventory[valid])
 }
 
-## ==== 3. Optimized nestedness analysis ====
+## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
+  # Create output directories
   dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
   dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id), showWarnings = FALSE)
   dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id), showWarnings = FALSE)
   
-  ### A. Calculate real matrix nestedness properties ----
+  ### ---- A. Calculate real matrix properties ----
+  # Fill & Size
   num_elements <- nrow(matrix) * ncol(matrix)
   num_ones <- sum(matrix == 1)
   fill_percentage <- (num_ones / num_elements) * 100
+  #Correlation coefficient
   cor_coef <- compute_cor_coef(matrix)
-  
-  # Calculate nestedness metrics
+  # Calculate nestedness statistics
   temp_real_matrix <- nestedtemp(matrix)
   nodf_real_matrix <- nestednodf(matrix, order = TRUE, weighted = FALSE, wbinary = FALSE)
-  
   metrics <- list(
     temp_stat = as.numeric(temp_real_matrix$statistic),
     nodf_col_stat = as.numeric(nodf_real_matrix$statistic[1]),
@@ -74,7 +79,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     nodf_gen_stat = as.numeric(nodf_real_matrix$statistic[3])
   )
   
-  ### B. Summary dataset ----
+  ### ---- B. Create and save summary dataset ----
   df_summary <- data.frame(
     matrix_id = matrix_id,
     num_rows = nrow(matrix),
@@ -90,35 +95,45 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   )
   write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
   
-  ### C. Parameters list ----
+  ### ---- C. Define parameters for progress bar ----
   baselines <- c('r00', 'r0', 'r1', 'r2', 'c0', 'c1', 'curveball', 'swap')
+  # Progress bar initialization
+  total_iter <- length(baselines) * 1000 # number of simulations
+  pb <- progress_bar$new(
+    format = "[:bar] :percent | ETA: :eta | Elapsed: :elapsedfull",
+    total = total_iter,
+    clear = FALSE,
+    width = 100
+  )
   
-  ### D. Process baselines sequentially ----
+  ### ---- D. Process baselines sequentially ----
+  # For each null model baseline:
   df_simulated_list <- lapply(baselines, function(b) {
     current_matrix <- matrix
     baseline_used <- b
+    # Special handling for c1 baseline (transpose and use r1 method)
     if (b == 'c1') {
       current_matrix <- t(matrix)
       baseline_used <- 'r1'
     }
     
-    # Simulate matrices
+    # Generate and simulate null model matrices
     nullmodel_mat <- nullmodel(x = current_matrix, method = baseline_used)
     simulated_mat <- simulate(object = nullmodel_mat, nsim = N_ITER_)
     
     # Process each simulated matrix
     df_simulated_b <- lapply(1:dim(simulated_mat)[3], function(i) {
       sim_i <- simulated_mat[, , i]
-      
-      # Save first matrix as example
+      # Save first matrix as example for each baseline
       if (i == 1) {
         mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
-        write.csv2(sim_i, mat_directory)
+        write.csv2(sim_i, mat_directory)  # Save matrix to file
       }
       
-      # Calculate metrics
+      ### ---- E. Compute simulated matrix properties ----
+      # Calculate correlation coefficient
       cor_coef_sim <- compute_cor_coef(sim_i)
-      
+      # Calculate nestedness metrics with error handling
       metrics_sim <- tryCatch({
         temp_sim_matrix <- nestedtemp(sim_i)
         nodf_sim_matrix <- nestednodf(sim_i, order = TRUE, weighted = FALSE, wbinary = FALSE)
@@ -129,9 +144,12 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
           nodf_gen_stat = as.numeric(nodf_sim_matrix$statistic[3])
         )
       }, error = function(e) {
+        # Return NAs if calculation fails
         list(temp_stat = NA_real_, nodf_col_stat = NA_real_, nodf_row_stat = NA_real_, nodf_gen_stat = NA_real_)
       })
-      
+      # Progress bar update
+      pb$tick()
+      # Create results row for this simulation
       data.frame(
         matrix_id = matrix_id,
         baseline = b,
@@ -144,30 +162,32 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       )
     })
     
-    # Combine results for this baseline
+    # Combine all simulations for this baseline
     df_simulated_b <- do.call(rbind, df_simulated_b)
-    
-    # Save nestedness results for this baseline
+    # Save baseline-specific results
     write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
     
+    # Return results for later combination
     df_simulated_b
   })
   
-  ### H. Combine and save all results ----
+  ### ---- F. Combine and save all results ----
+  # Combine results from all baselines
   df_simulated <- do.call(rbind, df_simulated_list)
+  # Save comprehensive results file
   write.csv2(df_simulated, paste0("nestedness_", matrix_id, "/nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
 }
 
 
 ## ==== 5. Apply function to real matrices (cross-platform optimized) ====
 
-# Set folder path
+# Set folder path containing matrices
 folder_path <- "Matrices examples simulated"
 # List all CSV files in the folder
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
 
 # Precompute cleaned names using step-by-step cleaning
-cleaned_names <- basename(file_list) %>%
+cleaned_names <- basename(file_list) %>%  # Extract filenames without path
   gsub("\\.csv$", "", .) %>%       # Remove .csv extension
   gsub("^cleaned_", "", .) %>%     # Remove "cleaned_" prefix
   gsub("^bin_", "", .) %>%         # Remove "bin_" prefix
@@ -175,28 +195,32 @@ cleaned_names <- basename(file_list) %>%
   gsub("_bin$", "", .)             # Remove "_bin" suffix
 
 # Set up parallel backend
-n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system
-cl <- makeCluster(n_cores)
-registerDoParallel(cl)
+n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
+cl <- makeCluster(n_cores)             # Create cluster object
+registerDoParallel(cl)                 # Register parallel backend
 
-# Export required functions to cluster
+# Export required functions and variables to cluster workers
 clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_"))
 
 # Process matrices in parallel
-results <- foreach(i = seq_along(file_list), .packages = c("data.table", "vegan", "permute")) %dopar% {
+results <- foreach(
+  i = seq_along(file_list), 
+  .packages = c("data.table", "vegan", "permute")  # Packages needed on workers
+) %dopar% {
   file_path <- file_list[i]
   matrix_id <- cleaned_names[i]
   
-  # Fast matrix reading
+  # Fast matrix reading using data.table's fread
   matrix_data <- as.matrix(fread(file_path, header = FALSE))
   
-  # Run analysis
+  # Perform nestedness analysis
   nestedness_analysis(matrix_data, matrix_id, N_ITER_)
   
+  # Return processed matrix ID for tracking
   return(matrix_id)
 }
 
-# Stop cluster
+# Cleanup: Stop cluster after processing
 stopCluster(cl)
 
 # Print completion message
