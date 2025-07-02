@@ -9,6 +9,7 @@ Meeting update :
 - think about visualization (for later, see down) |4|
 - gitstash |whenever|
 - Faire code pour p-values + significativité side |1| (OK), juste voir pour phoible
+- code pour subset des matrices comme the shortlist effect
 
 Code structure :
 - recheck nodf global value (sait-on jamais) (OK)
