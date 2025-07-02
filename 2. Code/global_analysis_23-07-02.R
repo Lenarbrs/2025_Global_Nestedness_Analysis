@@ -65,7 +65,7 @@ compute_cor_coef <- function(matrix) {
 
 ## ==== 3. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
-  
+
   # Create general directory
   dir.create(paste0("nestedness_", matrix_id))
   
@@ -103,7 +103,14 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   
   ### C. Parameters list ----
   baselines <- c('r00', 'r0', 'r1', 'r2','c0','c1','curveball', 'swap')
-  
+  # Progress bar
+  total_iter <- length(baselines) * 1000 # number of simulations
+  pb <- progress_bar$new(
+   format = "[:bar] :percent | ETA: :eta | Elapsed: :elapsedfull",
+   total = total_iter,
+   clear = FALSE,
+   width = 100
+   )
   # Create directories
   dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id))
   dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id))
@@ -177,6 +184,8 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
         mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
         write.csv2(sim_i, mat_directory)
       }
+      # Progress bar update
+      pb$tick()
     }
     # Save nestedness results of simulated matrices for 1 baseline
     write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
