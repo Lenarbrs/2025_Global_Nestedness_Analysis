@@ -14,10 +14,10 @@ library(doParallel)   # For parallel backend implementation
 
 ### ---- B. Parameters ----
 # Number of simulations to run for each null model
-N_ITER_ <- 10
+N_ITER_ <- 1000
 
 ### ---- C. Compute correlation function ----
-compute_type_correlation <- function(matrix) {
+compute_cor_coef <- function(matrix) {
   # Remove types (columns) not present in any collection
   matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
   
@@ -152,7 +152,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 
 ## ==== 3. Define and Save Test Matrices ====
 # Create directory for test matrices
-dir.create("Test_matrices", showWarnings = FALSE)
+dir.create("Test_matrices", showWarnings = TRUE)
 
 # Matrix sizes to generate
 matrix_sizes <- list(
@@ -189,7 +189,7 @@ for (i in seq_along(matrix_sizes)) {
   file_name <- sprintf("Test_matrices/test%d_%dx%d.csv", i, n_row, n_col)
   # Save matrix
   write.table(mat, file = file_name, 
-              row.names = FALSE, col.names = FALSE, sep = ",")
+              row.names = FALSE, col.names = FALSE, sep = ";")
   # Print progress
   cat(sprintf("Saved matrix %d: %dx%d (Fill: %.1f%%)\n", 
               i, n_row, n_col, 100 * mean(mat)))
@@ -201,7 +201,7 @@ for (i in seq_along(matrix_sizes)) {
 start_time <- Sys.time()
 
 # Set folder path
-folder_path <- "Test Matrices"
+folder_path <- "Test_matrices"
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
 
 ### ---- A. Precompute cleaned names ----
@@ -243,7 +243,10 @@ results <- foreach(
   
   tryCatch({
     # Fast matrix reading
-    matrix_data <- as.matrix(fread(file_path, header = FALSE))
+    matrix_data <- as.matrix(fread(file_path,
+                                   header = FALSE,
+                                   sep = "auto",  # handles both , and ;
+                                   encoding = "UTF-8"))
     
     # Log matrix dimensions
     dim_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
@@ -282,36 +285,42 @@ hours <- floor(as.numeric(duration) / 3600)
 minutes <- floor((as.numeric(duration) %% 3600) / 60)
 seconds <- round(as.numeric(duration) %% 60, 1)
 
-success_count <- sum(sapply(results, function(x) x$status == "success"))
+# FIXED: Extract status using safer method
+status_list <- lapply(results, function(x) x$status)
+success_count <- sum(status_list == "success", na.rm = TRUE)
 error_count <- length(file_list) - success_count
 
 cat("\n=== Processing Summary ===\n", file = log_file, append = TRUE)
-cat("Finished at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
+cat("Started at:", format(start_time, "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
+cat("Finished at:", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
+cat("Total runtime:", sprintf("%.1f seconds", as.numeric(duration)), "\n", file = log_file, append = TRUE)
+cat("Formatted runtime:", sprintf("%02d:%02d:%04.1f", hours, minutes, seconds), "(H:M:S)\n", file = log_file, append = TRUE)
 cat("Total matrices:", length(file_list), "\n", file = log_file, append = TRUE)
 cat("Successfully processed:", success_count, "\n", file = log_file, append = TRUE)
 cat("Failed:", error_count, "\n", file = log_file, append = TRUE)
 
-
 ### ---- F. Save runtime to separate file ----
 time_file <- "processing_time.txt"
-cat("Total processing time: ", sprintf("%.1f seconds", duration), "\n", file = time_file)
+cat("Total processing time: ", sprintf("%.1f seconds", as.numeric(duration)), "\n", file = time_file)
 cat("Started: ", format(start_time, "%Y-%m-%d %H:%M:%S"), "\n", file = time_file, append = TRUE)
 cat("Finished: ", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n", file = time_file, append = TRUE)
 cat("Matrix count: ", length(file_list), "\n", file = time_file, append = TRUE)
 cat("Successful: ", success_count, "\n", file = time_file, append = TRUE)
 cat("Failed: ", error_count, "\n", file = time_file, append = TRUE)
 
-
 # Print completion message to console
-cat("\nProcessing complete. Success:", success_count, "Errors:", error_count, "\n")
+cat("\nProcessing complete. Total time:", sprintf("%.1f seconds", as.numeric(duration)), "\n")
+cat("Success:", success_count, "matrices | Errors:", error_count, "\n")
 cat("See detailed log in:", log_file, "\n")
+cat("Runtime summary saved in:", time_file, "\n")
 
 # Print error details to console if any
 if (error_count > 0) {
   cat("\n=== Error Details ===\n")
-  errors <- results[sapply(results, function(x) x$status == "error")]
+  # FIXED: Extract errors using safer method
+  errors <- results[sapply(results, function(x) identical(x$status, "error"))]
   for (e in errors) {
     cat("Matrix:", e$matrix_id, "\n")
-    cat("Error:", e$error, "\n\n")
+    cat("Error:", if (!is.null(e$error)) e$error else "Unknown error", "\n\n")
   }
 }

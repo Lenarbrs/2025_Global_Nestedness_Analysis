@@ -1,17 +1,45 @@
 === Matrix Processing Log ===
-Started at: 2025-07-03 14:14:01 
+Started at: 2025-07-03 15:37:40 
 
-[2025-07-03 14:14:05] STARTED matrix: mat_example_3 (3/3)[2025-07-03 14:14:05] STARTED matrix: mat_example_1 (2/3) 
+[2025-07-03 15:37:45] STARTED matrix: test1_4x30 (1/14)4)[2025-07-03 15:37:45] STARTED matrix: test10_60x50 (2/14))[2025-07-03 15:37:45] STARTED matrix: test4_40x30 (9/14)4)
 
-[2025-07-03 14:14:05] SIZE: 6x5 (0 MB) 
-[2025-07-03 14:14:05] SIZE: 5x4 (0 MB) 
-[2025-07-03 14:14:05] SIZE: 5x4 (0 MB) 
-[2025-07-03 14:14:06] COMPLETED matrix: mat_example_1 
-[2025-07-03 14:14:06] COMPLETED matrix: mat_example_2 
-[2025-07-03 14:14:06] COMPLETED matrix: mat_example_3 
+[2025-07-03 15:37:45] SIZE: 5x40 (0 MB) MB)  
+
+[2025-07-03 15:37:45] SIZE: 90x40 (0.02 MB)) 
+
+
+[2025-07-03 15:37:45] SIZE: 30x220 (0.04 MB) 
+[2025-07-03 15:37:45] SIZE: 170x40 (0.03 MB) 
+[2025-07-03 15:37:45] SIZE: 50x180 (0.05 MB) 
+[2025-07-03 15:37:45] SIZE: 30x350 (0.06 MB) 
+[2025-07-03 15:37:46] COMPLETED matrix: test1_4x30 
+[2025-07-03 15:37:46] STARTED matrix: test6_35x50 (11/14) 
+[2025-07-03 15:37:46] SIZE: 35x50 (0.01 MB) 
+[2025-07-03 15:37:46] COMPLETED matrix: test3_5x40 
+[2025-07-03 15:37:46] STARTED matrix: test7_100x50 (12/14) 
+[2025-07-03 15:37:46] SIZE: 100x50 (0.02 MB) 
+[2025-07-03 15:37:49] COMPLETED matrix: test4_40x30 
+[2025-07-03 15:37:49] STARTED matrix: test8_70x80 (13/14) 
+[2025-07-03 15:37:49] SIZE: 70x80 (0.03 MB) 
+[2025-07-03 15:37:51] COMPLETED matrix: test6_35x50 
+[2025-07-03 15:37:51] STARTED matrix: test9_40x140 (14/14) 
+[2025-07-03 15:37:51] SIZE: 40x140 (0.03 MB) 
+[2025-07-03 15:37:54] COMPLETED matrix: test10_60x50 
+[2025-07-03 15:37:56] COMPLETED matrix: test11_90x40 
+[2025-07-03 15:38:01] COMPLETED matrix: test7_100x50 
+[2025-07-03 15:38:05] COMPLETED matrix: test8_70x80 
+[2025-07-03 15:38:05] COMPLETED matrix: test13_170x40 
+[2025-07-03 15:38:06] COMPLETED matrix: test12_30x220 
+[2025-07-03 15:38:06] COMPLETED matrix: test9_40x140 
+[2025-07-03 15:38:07] COMPLETED matrix: test2_75x110 
+[2025-07-03 15:38:08] COMPLETED matrix: test5_50x180 
+[2025-07-03 15:38:14] COMPLETED matrix: test14_30x350 
 
 === Processing Summary ===
-Finished at: 2025-07-03 14:14:06 
-Total matrices: 3 
-Successfully processed: 3 
+Started at: 2025-07-03 15:37:40 
+Finished at: 2025-07-03 15:38:14 
+Total runtime: 33.2 seconds 
+Formatted runtime: 00:00:33.2 (H:M:S)
+Total matrices: 14 
+Successfully processed: 14 
 Failed: 0 
