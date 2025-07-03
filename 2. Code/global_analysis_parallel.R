@@ -53,7 +53,7 @@ compute_cor_coef <- function(matrix) {
   cor(prevalence[valid], avg_inventory[valid])
 }
 
-## ==== 3. Nestedness analysis ====
+## ==== 2. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   # Create output directories
   dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
@@ -168,7 +168,7 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 }
 
 
-## ==== 5. Apply function to real matrices (with progress tracking) ====
+## ==== 3. Apply function to real matrices (with progress tracking) ====
 
 # Set folder path
 folder_path <- "Matrices examples simulated"
