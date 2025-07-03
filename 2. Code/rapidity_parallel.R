@@ -1,0 +1,317 @@
+## ==== 1. General setup ====
+### ---- A. Library import ----
+# general use
+library(tidyverse)
+# nestedness analysis
+library(vegan)
+library(permute)
+library(lattice)
+# time optimisation
+library(parallel)     # For parallel computing capabilities
+library(data.table)   # For fast file I/O operations
+library(foreach)      # For parallel looping constructs
+library(doParallel)   # For parallel backend implementation
+
+### ---- B. Parameters ----
+# Number of simulations to run for each null model
+N_ITER_ <- 10
+
+### ---- C. Compute correlation function ----
+compute_type_correlation <- function(matrix) {
+  # Remove types (columns) not present in any collection
+  matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
+  
+  # Calculate Prevalence & Average inventory size
+  inventory_size <- rowSums(matrix)
+  prevalence <- colSums(matrix)
+  avg_inventory <- colMeans(matrix * inventory_size)
+  
+  # Check for sufficient variance
+  if (length(prevalence) < 2 || sd(prevalence) == 0 || sd(avg_inventory) == 0) {
+    return(NA_real_)
+  }
+  # Compute Pearson correlation
+  cor(prevalence, avg_inventory)
+}
+
+
+## ==== 2. Nestedness analysis ====
+nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
+  # # Create output directories
+  # dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
+  # dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id), showWarnings = FALSE)
+  # dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id), showWarnings = FALSE)
+  
+  ### ---- A. Calculate real matrix properties ----
+  # Fill & Size
+  num_elements <- nrow(matrix) * ncol(matrix)
+  num_ones <- sum(matrix == 1)
+  fill_percentage <- (num_ones / num_elements) * 100
+  #Correlation coefficient
+  cor_coef <- compute_cor_coef(matrix)
+  # Calculate nestedness statistics
+  temp_real_matrix <- nestedtemp(matrix)
+  nodf_real_matrix <- nestednodf(matrix, order = TRUE, weighted = FALSE, wbinary = FALSE)
+  metrics <- list(
+    temp_stat = as.numeric(temp_real_matrix$statistic),
+    nodf_col_stat = as.numeric(nodf_real_matrix$statistic[1]),
+    nodf_row_stat = as.numeric(nodf_real_matrix$statistic[2]),
+    nodf_gen_stat = as.numeric(nodf_real_matrix$statistic[3])
+  )
+  
+  ### ---- B. Create and save summary dataset ----
+  df_summary <- data.frame(
+    matrix_id = matrix_id,
+    num_rows = nrow(matrix),
+    num_columns = ncol(matrix),
+    size = num_elements,
+    fill = fill_percentage,
+    cor_coef = cor_coef,
+    stat_nodf_columns = metrics$nodf_col_stat,
+    stat_nodf_rows = metrics$nodf_row_stat,
+    stat_nodf_general = metrics$nodf_gen_stat,
+    stat_temp = metrics$temp_stat,
+    stringsAsFactors = FALSE
+  )
+  # write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
+  
+  ### ---- C. Define baselines ----
+  baselines <- c('r00', 'r0', 'r1', 'r2', 'c0', 'c1', 'curveball', 'swap')
+  
+  ### ---- D. Process baselines sequentially ----
+  # For each null model baseline:
+  df_simulated_list <- lapply(baselines, function(b) {
+    current_matrix <- matrix
+    baseline_used <- b
+    # Special handling for c1 baseline (transpose and use r1 method)
+    if (b == 'c1') {
+      current_matrix <- t(matrix)
+      baseline_used <- 'r1'
+    }
+    
+    # Generate and simulate null model matrices
+    nullmodel_mat <- nullmodel(x = current_matrix, method = baseline_used)
+    simulated_mat <- simulate(object = nullmodel_mat, nsim = N_ITER_)
+    
+    # Process each simulated matrix
+    df_simulated_b <- lapply(1:dim(simulated_mat)[3], function(i) {
+      sim_i <- simulated_mat[, , i]
+      # # Save first matrix as example for each baseline
+      # if (i == 1) {
+      #   mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
+      #   write.csv2(sim_i, mat_directory)  # Save matrix to file
+      # }
+      
+      ### ---- E. Compute simulated matrix properties ----
+      # Calculate correlation coefficient
+      cor_coef_sim <- compute_cor_coef(sim_i)
+      # Calculate nestedness metrics with error handling
+      metrics_sim <- tryCatch({
+        temp_sim_matrix <- nestedtemp(sim_i)
+        nodf_sim_matrix <- nestednodf(sim_i, order = TRUE, weighted = FALSE, wbinary = FALSE)
+        list(
+          temp_stat = as.numeric(temp_sim_matrix$statistic),
+          nodf_col_stat = as.numeric(nodf_sim_matrix$statistic[1]),
+          nodf_row_stat = as.numeric(nodf_sim_matrix$statistic[2]),
+          nodf_gen_stat = as.numeric(nodf_sim_matrix$statistic[3])
+        )
+      }, error = function(e) {
+        # Return NAs if calculation fails
+        list(temp_stat = NA_real_, nodf_col_stat = NA_real_, nodf_row_stat = NA_real_, nodf_gen_stat = NA_real_)
+      })
+      
+      # Create results row for this simulation
+      data.frame(
+        matrix_id = matrix_id,
+        baseline = b,
+        ceof_cor = cor_coef_sim,
+        stat_nodf_columns = metrics_sim$nodf_col_stat,
+        stat_nodf_rows = metrics_sim$nodf_row_stat,
+        stat_nodf_general = metrics_sim$nodf_gen_stat,
+        stat_temp = metrics_sim$temp_stat,
+        stringsAsFactors = FALSE
+      )
+    })
+    
+    # Combine all simulations for this baseline
+    df_simulated_b <- do.call(rbind, df_simulated_b)
+    # # Save baseline-specific results
+    # write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
+    
+    # Return results for later combination
+    df_simulated_b
+  })
+  
+  ### ---- F. Combine and save all results ----
+  # Combine results from all baselines
+  df_simulated <- do.call(rbind, df_simulated_list)
+  # Save comprehensive results file
+  # write.csv2(df_simulated, paste0("nestedness_", matrix_id, "/nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
+}
+
+
+## ==== 3. Define and Save Test Matrices ====
+# Create directory for test matrices
+dir.create("Test_matrices", showWarnings = FALSE)
+
+# Matrix sizes to generate
+matrix_sizes <- list(
+  c(4, 30), c(75, 110), c(5, 40), c(40, 30), c(50, 180),
+  c(35, 50), c(100,50), c(70, 80), c(40, 140),
+  c(60,50), c(90,40), c(30,220), c(170, 40), c(30, 350)
+)
+
+# Matrix generation function
+# 30% is the mean fill in our real data
+# So we aim for a mean fill of 0.3 for the simulated too
+generate_matrix <- function(n_row, n_col, target_fill = 0.3) {
+  repeat {
+    # Create matrix with approximate target fill
+    mat <- matrix(rbinom(n_row * n_col, 1, target_fill), 
+                  nrow = n_row, ncol = n_col)
+    # Ensure matrix isn't empty (0% fill)
+    actual_fill <- mean(mat)
+    if (actual_fill > 0) break
+  }
+  return(mat)
+}
+
+# Generate and save matrices
+for (i in seq_along(matrix_sizes)) {
+  # Get dimensions
+  dims <- matrix_sizes[[i]]
+  n_row <- dims[1]
+  n_col <- dims[2]
+  # Generate matrix
+  mat <- generate_matrix(n_row, n_col)
+  
+  # Create filename
+  file_name <- sprintf("Test_matrices/test%d_%dx%d.csv", i, n_row, n_col)
+  # Save matrix
+  write.table(mat, file = file_name, 
+              row.names = FALSE, col.names = FALSE, sep = ",")
+  # Print progress
+  cat(sprintf("Saved matrix %d: %dx%d (Fill: %.1f%%)\n", 
+              i, n_row, n_col, 100 * mean(mat)))
+}
+
+
+## ==== 4. Apply function to real matrices ====
+# Start timing
+start_time <- Sys.time()
+
+# Set folder path
+folder_path <- "Test Matrices"
+file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+
+### ---- A. Precompute cleaned names ----
+cleaned_names <- basename(file_list) %>%
+  gsub("\\.csv$", "", .) %>%
+  gsub("^cleaned_", "", .) %>%
+  gsub("^bin_", "", .) %>%
+  gsub("^matrix_", "", .) %>%
+  gsub("_bin$", "", .)
+
+### ---- B. Set up progress log file ----
+log_file <- "matrix_processing.log"
+cat("=== Matrix Processing Log ===\n", file = log_file)
+cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n", file = log_file, append = TRUE)
+
+### ---- C. Set up parallel backend ----
+n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
+cl <- makeCluster(n_cores)
+registerDoParallel(cl)
+
+### ---- D. Process matrices in parallel ----
+# Export required functions to cluster
+clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_", "log_file"))
+
+# Process matrices and progress tracking
+results <- foreach(
+  i = seq_along(file_list), 
+  .packages = c("data.table", "vegan", "permute"),
+  .errorhandling = "pass"  # Continue processing even if some fail
+) %dopar% {
+  file_path <- file_list[i]
+  matrix_id <- cleaned_names[i]
+  
+  # Log start of processing
+  start_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"), 
+                      " STARTED matrix: ", matrix_id, 
+                      " (", i, "/", length(file_list), ")")
+  cat(start_msg, "\n", file = log_file, append = TRUE)
+  
+  tryCatch({
+    # Fast matrix reading
+    matrix_data <- as.matrix(fread(file_path, header = FALSE))
+    
+    # Log matrix dimensions
+    dim_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                      " SIZE: ", nrow(matrix_data), "x", ncol(matrix_data),
+                      " (", round(object.size(matrix_data)/1024^2, 2), " MB)")
+    cat(dim_msg, "\n", file = log_file, append = TRUE)
+    
+    # Run analysis
+    nestedness_analysis(matrix_data, matrix_id, N_ITER_)
+    
+    # Log successful completion
+    success_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                          " COMPLETED matrix: ", matrix_id)
+    cat(success_msg, "\n", file = log_file, append = TRUE)
+    
+    return(list(matrix_id = matrix_id, status = "success"))
+  }, error = function(e) {
+    # Log error details
+    error_msg <- paste0(format(Sys.time(), "[%Y-%m-%d %H:%M:%S]"),
+                        " ERROR in matrix: ", matrix_id,
+                        " - ", conditionMessage(e))
+    cat(error_msg, "\n", file = log_file, append = TRUE)
+    return(list(matrix_id = matrix_id, status = "error", error = conditionMessage(e)))
+  })
+}
+
+# Stop cluster
+stopCluster(cl)
+
+### ---- E. Final log summary ----
+end_time <- Sys.time()
+duration <- difftime(end_time, start_time, units = "secs")
+
+# Calculate duration components
+hours <- floor(as.numeric(duration) / 3600)
+minutes <- floor((as.numeric(duration) %% 3600) / 60)
+seconds <- round(as.numeric(duration) %% 60, 1)
+
+success_count <- sum(sapply(results, function(x) x$status == "success"))
+error_count <- length(file_list) - success_count
+
+cat("\n=== Processing Summary ===\n", file = log_file, append = TRUE)
+cat("Finished at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
+cat("Total matrices:", length(file_list), "\n", file = log_file, append = TRUE)
+cat("Successfully processed:", success_count, "\n", file = log_file, append = TRUE)
+cat("Failed:", error_count, "\n", file = log_file, append = TRUE)
+
+
+### ---- F. Save runtime to separate file ----
+time_file <- "processing_time.txt"
+cat("Total processing time: ", sprintf("%.1f seconds", duration), "\n", file = time_file)
+cat("Started: ", format(start_time, "%Y-%m-%d %H:%M:%S"), "\n", file = time_file, append = TRUE)
+cat("Finished: ", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n", file = time_file, append = TRUE)
+cat("Matrix count: ", length(file_list), "\n", file = time_file, append = TRUE)
+cat("Successful: ", success_count, "\n", file = time_file, append = TRUE)
+cat("Failed: ", error_count, "\n", file = time_file, append = TRUE)
+
+
+# Print completion message to console
+cat("\nProcessing complete. Success:", success_count, "Errors:", error_count, "\n")
+cat("See detailed log in:", log_file, "\n")
+
+# Print error details to console if any
+if (error_count > 0) {
+  cat("\n=== Error Details ===\n")
+  errors <- results[sapply(results, function(x) x$status == "error")]
+  for (e in errors) {
+    cat("Matrix:", e$matrix_id, "\n")
+    cat("Error:", e$error, "\n\n")
+  }
+}
