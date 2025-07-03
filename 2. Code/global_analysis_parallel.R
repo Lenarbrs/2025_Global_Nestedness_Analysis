@@ -21,37 +21,22 @@ library(doParallel)   # For parallel backend implementation
 N_ITER_ <- 10
 
 ### ---- C. Compute correlation function ----
-compute_cor_coef <- function(matrix) {
-  # Calculate inventory size for each cultural collection
-  row_totals <- rowSums(matrix)
-  non_zero <- matrix != 0
-  # Pre-allocate vector for average inventory sizes
-  avg_inventory <- numeric(ncol(matrix))
-  # Calculate average inventory size for each cultural type
-  for (j in 1:ncol(matrix)) {
-    type_col <- non_zero[, j]
-    if (any(type_col)) {
-      avg_inventory[j] <- mean(row_totals[type_col])
-    } else {
-      # Handle case where no agent has the item
-      avg_inventory[j] <- NA_real_
-    }
-  }
-  # Calculate cultural type prevalence
-  prevalence <- colSums(matrix)
+compute_type_correlation <- function(matrix) {
+  # Remove types (columns) not present in any collection
+  matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
   
-  # Check if correlation can be computed
-  valid <- !is.na(avg_inventory) & !is.na(prevalence)
-  if (sum(valid) < 2) return(NA_real_)
-  sd_prev <- sd(prevalence[valid])
-  sd_avginv <- sd(avg_inventory[valid])
-  if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
+  inventory_size <- rowSums(matrix)
+  prevalence <- colSums(matrix)
+  avg_inventory <- colMeans(matrix * inventory_size)
+  
+  # Check for sufficient variance
+  if (length(prevalence) < 2 || sd(prevalence) == 0 || sd(avg_inventory) == 0) {
     return(NA_real_)
   }
-  
-  # Compute and return Pearson correlation
-  cor(prevalence[valid], avg_inventory[valid])
+  # Compute Pearson correlation
+  cor(prevalence, avg_inventory)
 }
+
 
 ## ==== 2. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
