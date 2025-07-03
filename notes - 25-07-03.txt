@@ -1,8 +1,9 @@
 Current steps :
 - journal de bord (later)
 - pre-registration (reu needed)
-- code skeleton
+- code skeleton + paralellisation (OK)
 - P-VALUE (OK for now)
+- subsets of big matrices (in progress)
 
 Meeting update :
 - read héraldique paper (open data) voir TheNest |3|
@@ -12,11 +13,8 @@ Meeting update :
 - code pour subset des matrices comme the shortlist effect
 - ecrire sur le pre reg que subset movies et qu'on lache la grande matrice de phoible (+ justifier)
 
-Code structure :
-- recheck nodf global value (sait-on jamais) (OK)
-
 Petites réfexions par rapport à la structure du dataset :
-- On rajoute le fill des matrices simulées ?
+- On rajoute le fill des matrices simulées ? (for now : NO)
 - le nb de lignes de colonnes des matrices simulées ? (car par exemple avec c0 il y a des colonnes qui peuvent avoir que des 0)
 - le nb de ligne / colonnes avec que des 0 dans les mat simulées
 
