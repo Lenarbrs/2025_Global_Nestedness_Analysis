@@ -1,8 +1,8 @@
 Current steps :
-- journal de bord
-- pre-registration
+- journal de bord (later)
+- pre-registration (reu needed)
 - code skeleton
-- P-VALUE (two sided, *2)
+- P-VALUE (OK for now)
 
 Meeting update :
 - read héraldique paper (open data) voir TheNest |3|
@@ -14,7 +14,6 @@ Meeting update :
 
 Code structure :
 - recheck nodf global value (sait-on jamais) (OK)
-
 
 Petites réfexions par rapport à la structure du dataset :
 - On rajoute le fill des matrices simulées ?
