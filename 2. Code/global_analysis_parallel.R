@@ -25,6 +25,7 @@ compute_type_correlation <- function(matrix) {
   # Remove types (columns) not present in any collection
   matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
   
+  # Calculate Prevalence & Average inventory size
   inventory_size <- rowSums(matrix)
   prevalence <- colSums(matrix)
   avg_inventory <- colMeans(matrix * inventory_size)
