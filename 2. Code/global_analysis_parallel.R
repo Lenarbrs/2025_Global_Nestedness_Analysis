@@ -154,35 +154,34 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 }
 
 
-## ==== 3. Apply function to real matrices (with progress tracking) ====
-
+## ==== 3. Apply function to real matrices ====
 # Set folder path
 folder_path <- "Matrices examples simulated"
-# List all CSV files in the folder
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
 
-# Precompute cleaned names using step-by-step cleaning
-cleaned_names <- basename(file_list) %>%  # Extract filenames without path
-  gsub("\\.csv$", "", .) %>%       # Remove .csv extension
-  gsub("^cleaned_", "", .) %>%     # Remove "cleaned_" prefix
-  gsub("^bin_", "", .) %>%         # Remove "bin_" prefix
-  gsub("^matrix_", "", .) %>%      # Remove "matrix_" prefix
-  gsub("_bin$", "", .)             # Remove "_bin" suffix
+### ---- A. Precompute cleaned names ----
+cleaned_names <- basename(file_list) %>%
+  gsub("\\.csv$", "", .) %>%
+  gsub("^cleaned_", "", .) %>%
+  gsub("^bin_", "", .) %>%
+  gsub("^matrix_", "", .) %>%
+  gsub("_bin$", "", .)
 
-# Set up progress log file
+### ---- B. Set up progress log file ----
 log_file <- "matrix_processing.log"
 cat("=== Matrix Processing Log ===\n", file = log_file)
 cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n", file = log_file, append = TRUE)
 
-# Set up parallel backend
+### ---- C. Set up parallel backend ----
 n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 
+### ---- D. Process matrices in parallel ----
 # Export required functions to cluster
 clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_", "log_file"))
 
-# Process matrices in parallel with progress tracking
+# Process matrices and progress tracking
 results <- foreach(
   i = seq_along(file_list), 
   .packages = c("data.table", "vegan", "permute"),
@@ -229,7 +228,7 @@ results <- foreach(
 # Stop cluster
 stopCluster(cl)
 
-# Final log summary
+### ---- E. Final log summary ----
 success_count <- sum(sapply(results, function(x) x$status == "success"))
 error_count <- length(file_list) - success_count
 
