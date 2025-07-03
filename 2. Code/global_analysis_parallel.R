@@ -21,39 +21,25 @@ library(doParallel)   # For parallel backend implementation
 N_ITER_ <- 10
 
 ### ---- C. Compute correlation function ----
-compute_cor_coef <- function(matrix) {
-  # Calculate inventory size for each cultural collection
-  row_totals <- rowSums(matrix)
-  non_zero <- matrix != 0
-  # Pre-allocate vector for average inventory sizes
-  avg_inventory <- numeric(ncol(matrix))
-  # Calculate average inventory size for each cultural type
-  for (j in 1:ncol(matrix)) {
-    type_col <- non_zero[, j]
-    if (any(type_col)) {
-      avg_inventory[j] <- mean(row_totals[type_col])
-    } else {
-      # Handle case where no agent has the item
-      avg_inventory[j] <- NA_real_
-    }
-  }
-  # Calculate cultural type prevalence
-  prevalence <- colSums(matrix)
+compute_type_correlation <- function(matrix) {
+  # Remove types (columns) not present in any collection
+  matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
   
-  # Check if correlation can be computed
-  valid <- !is.na(avg_inventory) & !is.na(prevalence)
-  if (sum(valid) < 2) return(NA_real_)
-  sd_prev <- sd(prevalence[valid])
-  sd_avginv <- sd(avg_inventory[valid])
-  if (is.na(sd_prev) || is.na(sd_avginv) || sd_prev == 0 || sd_avginv == 0) {
+  # Calculate Prevalence & Average inventory size
+  inventory_size <- rowSums(matrix)
+  prevalence <- colSums(matrix)
+  avg_inventory <- colMeans(matrix * inventory_size)
+  
+  # Check for sufficient variance
+  if (length(prevalence) < 2 || sd(prevalence) == 0 || sd(avg_inventory) == 0) {
     return(NA_real_)
   }
-  
-  # Compute and return Pearson correlation
-  cor(prevalence[valid], avg_inventory[valid])
+  # Compute Pearson correlation
+  cor(prevalence, avg_inventory)
 }
 
-## ==== 3. Nestedness analysis ====
+
+## ==== 2. Nestedness analysis ====
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   # Create output directories
   dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
@@ -168,35 +154,34 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 }
 
 
-## ==== 5. Apply function to real matrices (with progress tracking) ====
-
+## ==== 3. Apply function to real matrices ====
 # Set folder path
 folder_path <- "Matrices examples simulated"
-# List all CSV files in the folder
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
 
-# Precompute cleaned names using step-by-step cleaning
-cleaned_names <- basename(file_list) %>%  # Extract filenames without path
-  gsub("\\.csv$", "", .) %>%       # Remove .csv extension
-  gsub("^cleaned_", "", .) %>%     # Remove "cleaned_" prefix
-  gsub("^bin_", "", .) %>%         # Remove "bin_" prefix
-  gsub("^matrix_", "", .) %>%      # Remove "matrix_" prefix
-  gsub("_bin$", "", .)             # Remove "_bin" suffix
+### ---- A. Precompute cleaned names ----
+cleaned_names <- basename(file_list) %>%
+  gsub("\\.csv$", "", .) %>%
+  gsub("^cleaned_", "", .) %>%
+  gsub("^bin_", "", .) %>%
+  gsub("^matrix_", "", .) %>%
+  gsub("_bin$", "", .)
 
-# Set up progress log file
+### ---- B. Set up progress log file ----
 log_file <- "matrix_processing.log"
 cat("=== Matrix Processing Log ===\n", file = log_file)
 cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n", file = log_file, append = TRUE)
 
-# Set up parallel backend
+### ---- C. Set up parallel backend ----
 n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
 cl <- makeCluster(n_cores)
 registerDoParallel(cl)
 
+### ---- D. Process matrices in parallel ----
 # Export required functions to cluster
 clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_", "log_file"))
 
-# Process matrices in parallel with progress tracking
+# Process matrices and progress tracking
 results <- foreach(
   i = seq_along(file_list), 
   .packages = c("data.table", "vegan", "permute"),
@@ -243,7 +228,7 @@ results <- foreach(
 # Stop cluster
 stopCluster(cl)
 
-# Final log summary
+### ---- E. Final log summary ----
 success_count <- sum(sapply(results, function(x) x$status == "success"))
 error_count <- length(file_list) - success_count
 

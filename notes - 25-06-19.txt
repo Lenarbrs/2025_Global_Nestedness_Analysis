@@ -10,6 +10,7 @@ Meeting update :
 - gitstash |whenever|
 - Faire code pour p-values + significativité side |1| (OK), juste voir pour phoible
 - code pour subset des matrices comme the shortlist effect
+- ecrire sur le pre reg que subset movies et qu'on lache la grande matrice de phoible (+ justifier)
 
 Code structure :
 - recheck nodf global value (sait-on jamais) (OK)
