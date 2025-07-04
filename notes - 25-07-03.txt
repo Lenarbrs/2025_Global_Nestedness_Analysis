@@ -5,10 +5,6 @@ Current steps :
 - P-VALUE (OK for now)
 - subsets of big matrices (in progress)
 
-A FAIRE CE SOIR:
-- run le code des subset sur toutes les matrices de movielens / netflix
-- run le code pour saoir combien de temps prend le code optimisé 
-
 Meeting update :
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
