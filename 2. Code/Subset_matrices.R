@@ -2,9 +2,9 @@
 # Set up your directories
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-input_dir  <- "data/input" # folder containing the original csv files 
-output_dir <- "data/output" # folder where the sorted csvs will be saved 
-dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
+input_dir  <- "movies" # folder containing the original csv files 
+output_dir <- "subset of movies" # folder where the sorted csvs will be saved 
+# dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
 
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
