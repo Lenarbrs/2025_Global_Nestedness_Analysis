@@ -28,7 +28,7 @@ file_list <- list.files(path = folder_path, pattern = "\\.csv$",
                         full.names = TRUE)
 
 ### ---- C. Compute correlation function ----
-compute_type_correlation <- function(matrix) {
+compute_cor_coef <- function(matrix) {
   # Remove types (columns) not present in any collection
   matrix <- matrix[, colSums(matrix) > 0, drop = FALSE]
   
