@@ -18,7 +18,7 @@ library(doParallel)   # For parallel backend implementation
 
 ### ---- B. Parameters ----
 # Number of simulations to run for each null model
-N_ITER_ <- 1000
+N_ITER_ <- 3
 
 ###################################################
 # =============== SET FOLDER PATH =============== #
@@ -263,7 +263,8 @@ results <- foreach(
 stopCluster(cl)
 
 ### ---- E. Final log summary ----
-success_count <- sum(sapply(results, function(x) x$status == "success"))
+status_list <- lapply(results, function(x) x$status)
+success_count <- sum(status_list == "success", na.rm = TRUE)
 error_count <- length(file_list) - success_count
 
 cat("\n=== Processing Summary ===\n", 
@@ -285,9 +286,10 @@ cat("See detailed log in:", log_file, "\n")
 # Print error details to console if any
 if (error_count > 0) {
   cat("\n=== Error Details ===\n")
-  errors <- results[sapply(results, function(x) x$status == "error")]
+  # FIXED: Extract errors using safer method
+  errors <- results[sapply(results, function(x) identical(x$status, "error"))]
   for (e in errors) {
     cat("Matrix:", e$matrix_id, "\n")
-    cat("Error:", e$error, "\n\n")
+    cat("Error:", if (!is.null(e$error)) e$error else "Unknown error", "\n\n")
   }
 }
