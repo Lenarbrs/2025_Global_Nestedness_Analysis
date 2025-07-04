@@ -195,6 +195,7 @@ cleaned_names <- basename(file_list) %>%
   gsub("^cleaned_", "", .) %>%
   gsub("^bin_", "", .) %>%
   gsub("^matrix_", "", .) %>%
+  gsub("_filtered$", "", .) %>%
   gsub("_bin$", "", .)
 
 ### ---- B. Set up progress log file ----
