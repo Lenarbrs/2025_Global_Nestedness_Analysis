@@ -18,7 +18,7 @@ library(doParallel)   # For parallel backend implementation
 
 ### ---- B. Parameters ----
 # Number of simulations to run for each null model
-N_ITER_ <- 3
+N_ITER_ <- 1000
 
 ###################################################
 # =============== SET FOLDER PATH =============== #
