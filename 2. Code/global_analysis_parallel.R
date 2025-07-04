@@ -20,6 +20,13 @@ library(doParallel)   # For parallel backend implementation
 # Number of simulations to run for each null model
 N_ITER_ <- 10
 
+###################################################
+# =============== SET FOLDER PATH =============== #
+###################################################
+folder_path <- "Matrices examples simulated"
+file_list <- list.files(path = folder_path, pattern = "\\.csv$", 
+                        full.names = TRUE)
+
 ### ---- C. Compute correlation function ----
 compute_type_correlation <- function(matrix) {
   # Remove types (columns) not present in any collection
@@ -47,12 +54,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   # Create output directories
   dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
   dir.create(paste0("nestedness_", matrix_id, 
-                    "/sim_", matrix_id), 
-             showWarnings = FALSE)
+                    "/sim_", matrix_id), showWarnings = FALSE)
   dir.create(paste0("nestedness_", matrix_id, 
                     "/sim_", matrix_id, 
-                    "/simmat_examples_", matrix_id), 
-             showWarnings = FALSE)
+                    "/simmat_examples_", matrix_id), showWarnings = FALSE)
   
   ### ---- A. Calculate real matrix properties ----
   # Fill & Size
@@ -183,11 +188,6 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # 3. Apply function to real matrices ----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-# Set folder path
-folder_path <- "Matrices examples simulated"
-file_list <- list.files(path = folder_path, pattern = "\\.csv$", 
-                        full.names = TRUE)
 
 ### ---- A. Precompute cleaned names ----
 cleaned_names <- basename(file_list) %>%
