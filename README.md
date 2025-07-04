@@ -4,12 +4,12 @@
 
 - Archeology pots: 7 matrices
 - Kamilar, Atkinson - chimpanzees orangutans: 10 matrices (4 humans + 3 chimpanzees + 3 ourangutans)
-- Koshevoy, Rebours - phoible: 71 matrices (70 families + 1 global matrix)
+- Koshevoy, Rebours - phoible: 70 matrices (70 families)
 - Dubourg, Morin - trivia: 3 matrices (3 themes)
 - Salali et al. - BaYaka plant knowledge: 2 matrices (same base, different treatment of NA)
 - Morin, Shobchuk - the shorlist effect (not in github): 30 in total, MovieLens -> 15 matrices (genre), Netflix -> 15 matrices (genre)
 
-In total: 123 matrices
+In total: 122 matrices
 
 ## Global Dataset Structure:
 
