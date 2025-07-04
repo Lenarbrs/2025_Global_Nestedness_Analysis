@@ -38,13 +38,21 @@ compute_type_correlation <- function(matrix) {
   cor(prevalence, avg_inventory)
 }
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 2. Nestedness analysis ----
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## ==== 2. Nestedness analysis ====
+## Function for the nestedness analysis
 nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   # Create output directories
   dir.create(paste0("nestedness_", matrix_id), showWarnings = FALSE)
-  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id), showWarnings = FALSE)
-  dir.create(paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id), showWarnings = FALSE)
+  dir.create(paste0("nestedness_", matrix_id, 
+                    "/sim_", matrix_id), 
+             showWarnings = FALSE)
+  dir.create(paste0("nestedness_", matrix_id, 
+                    "/sim_", matrix_id, 
+                    "/simmat_examples_", matrix_id), 
+             showWarnings = FALSE)
   
   ### ---- A. Calculate real matrix properties ----
   # Fill & Size
@@ -55,7 +63,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   cor_coef <- compute_cor_coef(matrix)
   # Calculate nestedness statistics
   temp_real_matrix <- nestedtemp(matrix)
-  nodf_real_matrix <- nestednodf(matrix, order = TRUE, weighted = FALSE, wbinary = FALSE)
+  nodf_real_matrix <- nestednodf(matrix, 
+                                 order = TRUE, 
+                                 weighted = FALSE,
+                                 wbinary = FALSE)
   metrics <- list(
     temp_stat = as.numeric(temp_real_matrix$statistic),
     nodf_col_stat = as.numeric(nodf_real_matrix$statistic[1]),
@@ -77,7 +88,9 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     stat_temp = metrics$temp_stat,
     stringsAsFactors = FALSE
   )
-  write.csv2(df_summary, paste0("nestedness_", matrix_id, "/nest_summary_", matrix_id, ".csv"), row.names = FALSE)
+  write.csv2(df_summary, paste0("nestedness_", matrix_id, 
+                                "/nest_summary_", matrix_id, ".csv"), 
+             row.names = FALSE)
   
   ### ---- C. Define baselines ----
   baselines <- c('r00', 'r0', 'r1', 'r2', 'c0', 'c1', 'curveball', 'swap')
@@ -102,7 +115,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       sim_i <- simulated_mat[, , i]
       # Save first matrix as example for each baseline
       if (i == 1) {
-        mat_directory <- paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/simmat_examples_", matrix_id, "/example_simmat_", matrix_id, "_", b, ".csv")
+        mat_directory <- paste0("nestedness_", matrix_id, 
+                                "/sim_", matrix_id, 
+                                "/simmat_examples_", matrix_id, 
+                                "/example_simmat_", matrix_id, "_", b, ".csv")
         write.csv2(sim_i, mat_directory)  # Save matrix to file
       }
       
@@ -112,7 +128,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
       # Calculate nestedness metrics with error handling
       metrics_sim <- tryCatch({
         temp_sim_matrix <- nestedtemp(sim_i)
-        nodf_sim_matrix <- nestednodf(sim_i, order = TRUE, weighted = FALSE, wbinary = FALSE)
+        nodf_sim_matrix <- nestednodf(sim_i, 
+                                      order = TRUE, 
+                                      weighted = FALSE,
+                                      wbinary = FALSE)
         list(
           temp_stat = as.numeric(temp_sim_matrix$statistic),
           nodf_col_stat = as.numeric(nodf_sim_matrix$statistic[1]),
@@ -121,7 +140,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
         )
       }, error = function(e) {
         # Return NAs if calculation fails
-        list(temp_stat = NA_real_, nodf_col_stat = NA_real_, nodf_row_stat = NA_real_, nodf_gen_stat = NA_real_)
+        list(temp_stat = NA_real_, 
+             nodf_col_stat = NA_real_, 
+             nodf_row_stat = NA_real_, 
+             nodf_gen_stat = NA_real_)
       })
       
       # Create results row for this simulation
@@ -140,7 +162,10 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
     # Combine all simulations for this baseline
     df_simulated_b <- do.call(rbind, df_simulated_b)
     # Save baseline-specific results
-    write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, "/sim_", matrix_id, "/nest_simulated_", matrix_id, "_", b, ".csv"), row.names = FALSE)
+    write.csv2(df_simulated_b, paste0("nestedness_", matrix_id, 
+                                      "/sim_", matrix_id, 
+                                      "/nest_simulated_", matrix_id, 
+                                      "_", b, ".csv"), row.names = FALSE)
     
     # Return results for later combination
     df_simulated_b
@@ -150,14 +175,19 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
   # Combine results from all baselines
   df_simulated <- do.call(rbind, df_simulated_list)
   # Save comprehensive results file
-  write.csv2(df_simulated, paste0("nestedness_", matrix_id, "/nest_simulated_", matrix_id, "_all.csv"), row.names = FALSE)
+  write.csv2(df_simulated, paste0("nestedness_", matrix_id, 
+                                  "/nest_simulated_", matrix_id, 
+                                  "_all.csv"), row.names = FALSE)
 }
 
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# 3. Apply function to real matrices ----
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-## ==== 3. Apply function to real matrices ====
 # Set folder path
 folder_path <- "Matrices examples simulated"
-file_list <- list.files(path = folder_path, pattern = "\\.csv$", full.names = TRUE)
+file_list <- list.files(path = folder_path, pattern = "\\.csv$", 
+                        full.names = TRUE)
 
 ### ---- A. Precompute cleaned names ----
 cleaned_names <- basename(file_list) %>%
@@ -170,7 +200,8 @@ cleaned_names <- basename(file_list) %>%
 ### ---- B. Set up progress log file ----
 log_file <- "matrix_processing.log"
 cat("=== Matrix Processing Log ===\n", file = log_file)
-cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n\n", file = log_file, append = TRUE)
+cat("Started at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), 
+    "\n\n", file = log_file, append = TRUE)
 
 ### ---- C. Set up parallel backend ----
 n_cores <- max(1, detectCores() - 2)  # Reserve 2 cores for system stability
@@ -179,7 +210,8 @@ registerDoParallel(cl)
 
 ### ---- D. Process matrices in parallel ----
 # Export required functions to cluster
-clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", "N_ITER_", "log_file"))
+clusterExport(cl, c("compute_cor_coef", "nestedness_analysis", 
+                    "N_ITER_", "log_file"))
 
 # Process matrices and progress tracking
 results <- foreach(
@@ -221,7 +253,8 @@ results <- foreach(
                         " ERROR in matrix: ", matrix_id,
                         " - ", conditionMessage(e))
     cat(error_msg, "\n", file = log_file, append = TRUE)
-    return(list(matrix_id = matrix_id, status = "error", error = conditionMessage(e)))
+    return(list(matrix_id = matrix_id, status = "error", 
+                error = conditionMessage(e)))
   })
 }
 
@@ -232,14 +265,20 @@ stopCluster(cl)
 success_count <- sum(sapply(results, function(x) x$status == "success"))
 error_count <- length(file_list) - success_count
 
-cat("\n=== Processing Summary ===\n", file = log_file, append = TRUE)
-cat("Finished at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n", file = log_file, append = TRUE)
-cat("Total matrices:", length(file_list), "\n", file = log_file, append = TRUE)
-cat("Successfully processed:", success_count, "\n", file = log_file, append = TRUE)
-cat("Failed:", error_count, "\n", file = log_file, append = TRUE)
+cat("\n=== Processing Summary ===\n", 
+    file = log_file, append = TRUE)
+cat("Finished at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n", 
+    file = log_file, append = TRUE)
+cat("Total matrices:", length(file_list), "\n",
+    file = log_file, append = TRUE)
+cat("Successfully processed:", success_count, "\n", 
+    file = log_file, append = TRUE)
+cat("Failed:", error_count, "\n", 
+    file = log_file, append = TRUE)
 
 # Print completion message to console
-cat("\nProcessing complete. Success:", success_count, "Errors:", error_count, "\n")
+cat("\nProcessing complete. Success:", success_count, "Errors:", 
+    error_count, "\n")
 cat("See detailed log in:", log_file, "\n")
 
 # Print error details to console if any
