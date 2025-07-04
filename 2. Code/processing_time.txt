@@ -1,6 +1,0 @@
-Total processing time:  33.2 seconds 
-Started:  2025-07-03 15:37:40 
-Finished:  2025-07-03 15:38:14 
-Matrix count:  14 
-Successful:  14 
-Failed:  0 
