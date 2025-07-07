@@ -19,7 +19,7 @@ Petites réfexions par rapport à la structure du dataset :
 - le nb de ligne / colonnes avec que des 0 dans les mat simulées
 
 Think about visualisation :
-- matrix size vs nestedness/anti-nestedness
+- matrix size vs nestedness/anti-nestedness (categorical ? p continue ?)
 - fill vs nestedness
 - phoible plot
-- heatmaps
+- heatmaps (of what ?)
