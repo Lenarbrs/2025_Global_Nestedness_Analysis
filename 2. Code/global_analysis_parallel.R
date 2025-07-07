@@ -23,7 +23,7 @@ N_ITER_ <- 1000
 ###################################################
 # =============== SET FOLDER PATH =============== #
 ###################################################
-folder_path <- "Matrices examples simulated"
+folder_path <- "Folder_path"
 file_list <- list.files(path = folder_path, pattern = "\\.csv$", 
                         full.names = TRUE)
 
