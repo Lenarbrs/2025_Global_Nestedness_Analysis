@@ -1,69 +1,43 @@
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Boostrapped p-value calculation ----
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# ======== Boostrapped p-value calculation ========
 
-# Load tidyverse
+## ==== 1. Library import ====
 library(tidyverse)
 
-<<<<<<< HEAD
-# Function to compute a two‐tailed p‐value
-# obs = one observed statistic
-# sims = vector of simulated statistics
-=======
-# Load simulated statistics
-sims <- read_csv2("nest_simulated_americanhistory_all.csv", show_col_types = FALSE)
+# ==== 2. Data import and processing ====
 
-# Load observed statistics and rename columns
-reals <- read_csv2("nest_summary_americanhistory.csv", show_col_types = FALSE) %>%
-  select(
-    matrix_id,
-    obs_NODF = stat_nodf_general,  # Observed nestedness
-    obs_Temp = stat_temp           # Observed temperature
-  )
+# Define paths
+code_dir <- getwd()  # Use current working directory instead of "2. Code"
+results_dir <- "2025_Global_Nestedness_Analysis/5. Test"
 
-# Function to compute two-tailed (bilateral) p-value
->>>>>>> ae67159f90d42ff506578ac3fd213217beb8296a
-compute_pval <- function(obs, sims) {
-  n_total   <- length(sims)   # total number of sims
-  n_greater <- sum(sims >= obs)   # sims at or above obs
-  n_lesser  <- sum(sims <= obs) # sims at or below obs
-  p_value   <- 2 * min(n_greater, n_lesser) / n_total
-  return(min(p_value, 1))            # cap at 1
-}
+# Create the log file in the current directory
+log_file <- "processing_log.txt"
+writeLines("Processing nestedness results...\n", log_file)
 
-# Root directory containing your “4. Results dataset” folder
-root_dir <- "C:/Users/Léna/Desktop/GitHub/Global_Nestedness_Analysis/4. Results dataset"
+# Get all nestedness folders
+nestedness_folders <- list.dirs(results_dir, recursive = TRUE) %>%
+  keep(~str_detect(.x, "nestedness_")) %>%
+  discard(~str_detect(.x, "sim_"))  # Exclude the folder we don't care about
 
-# List all first‐level subfolders (e.g. “phoible”, “Archeology”, etc.)
-level1_dirs <- list.dirs(root_dir, recursive = FALSE, full.names = TRUE)
-results_list <- list()
+# Initialize an empty tibble to store all results
+all_results <- tibble()
 
-# Loop over each first‐level folder
-for (lvl1 in level1_dirs) {
-  # Get the name of the level‐1 category
-  category1 <- basename(lvl1)
-  # List its immediate subfolders (level‐2)
-  level2_dirs <- list.dirs(lvl1, recursive = FALSE, full.names = TRUE)
-  # Loop over each level‐2 folder
-  for (lvl2 in level2_dirs) {
+
+# Process each nestedness folder
+for (folder in nestedness_folders) {
+  # Extract the "something" part from folder name
+  matrix_name <- str_replace(basename(folder), "nestedness_", "")
+  
+  # Construct file paths
+  sim_file <- file.path(folder, paste0("nest_simulated_", matrix_name, "_all.csv"))
+  summary_file <- file.path(folder, paste0("nest_summary_", matrix_name, ".csv"))
+  
+  # Check if both files exist
+  if (file.exists(sim_file) && file.exists(summary_file)) {
+    # Log current processing
+    write(paste("\nProcessing:", matrix_name), log_file, append = TRUE)
     
-    # Name of the specific dataset (level‐2)
-    category2 <- basename(lvl2)
-    
-    # Find the one simulated‐data CSV and one summary CSV
-    sim_file     <- list.files(lvl2, pattern = "^nest_simulated.*\\.csv$", full.names = TRUE)
-    summary_file <- list.files(lvl2, pattern = "^nest_summary.*\\.csv$",  full.names = TRUE)
-    
-    # If file detection fails, warn and skip
-    if (length(sim_file) != 1 || length(summary_file) != 1) {
-      warning("Skipping ", lvl2, 
-              ": found ", length(sim_file), " simulated files and ", 
-              length(summary_file), " summary files.")
-      next
-    }
-    
-    # Read in simulations and observed summaries
-    sims  <- read_csv2(sim_file, show_col_types = FALSE)
+    # Load data
+    sims <- read_csv2(sim_file, show_col_types = FALSE)
     reals <- read_csv2(summary_file, show_col_types = FALSE) %>%
       select(
         matrix_id,
@@ -71,70 +45,70 @@ for (lvl1 in level1_dirs) {
         obs_Temp = stat_temp
       )
     
-    # Compute p‐values and direction flags per matrix / baseline
-    df_out <- reals %>%
+    ## ==== 3. Compute p-value ====
+    compute_pval <- function(obs, sims) {
+      n_total <- length(sims)
+      n_greater <- sum(sims >= obs, na.rm = TRUE)
+      n_lesser <- sum(sims <= obs, na.rm = TRUE)
+      p_value <- 2 * min(n_greater, n_lesser) / n_total
+      return(min(p_value, 1))
+    }
+    
+    ## ==== 4. Calculate data position ====
+    results <- reals %>%
       expand_grid(baseline = unique(sims$baseline)) %>%
       left_join(sims, by = c("matrix_id", "baseline")) %>%
       group_by(matrix_id, baseline) %>%
       summarise(
-        # two‐tailed p‐values
         p_NODF = compute_pval(first(obs_NODF), stat_nodf_general),
-        p_Temp = compute_pval(first(obs_Temp),   stat_temp),
-        # medians of sims for sign comparison
-        med_sim_NODF = median(stat_nodf_general, na.rm = TRUE),
-        med_sim_Temp = median(stat_temp,           na.rm = TRUE),
-        # observed values 
+        p_Temp = compute_pval(first(obs_Temp), stat_temp),
+        mean_sim_NODF = median(stat_nodf_general, na.rm = TRUE),
+        mean_sim_Temp = median(stat_temp, na.rm = TRUE),
         obs_NODF = first(obs_NODF),
         obs_Temp = first(obs_Temp),
         .groups = "drop"
       ) %>%
       mutate(
-        # decide “nested” vs “antinested” vs “equal”
         sign_NODF = case_when(
-          obs_NODF >  med_sim_NODF ~ "nested", # higher nodf = more nested
-          obs_NODF <  med_sim_NODF ~ "antinested", # lower nodf = less nested
-          TRUE                     ~ "equal"
+          obs_NODF > mean_sim_NODF ~ "nested",
+          obs_NODF < mean_sim_NODF ~ "antinested",
+          TRUE ~ "equal"
         ),
         sign_Temp = case_when(
-          obs_Temp <  med_sim_Temp ~ "nested",     # lower temp = more nested
-          obs_Temp >  med_sim_Temp ~ "antinested", # higher temp = less nested
-          TRUE                     ~ "equal"
+          obs_Temp < mean_sim_Temp ~ "nested",
+          obs_Temp > mean_sim_Temp ~ "antinested",
+          TRUE ~ "equal"
         )
       ) %>%
-      # keep only essentials and format p‐values
-      select(matrix_id, baseline, p_NODF, sign_NODF, p_Temp, sign_Temp) %>%
-      mutate(across(c(p_NODF, p_Temp), ~ sprintf("%.4f", .x))) %>%
-      # annotate with folder levels
-      mutate(
-        category1 = category1,
-        category2 = category2
-      )
+      select(matrix_id, baseline, p_NODF, p_Temp, sign_NODF, sign_Temp)
     
-    # Save a separate CSV for each matrix in this dataset
-    df_out %>%
-      group_split(matrix_id) %>%
-      walk(~ write_csv2(.x,
-                        file.path(lvl2,
-                                  paste0("results_matrix_", unique(.x$matrix_id), ".csv"))))
+    # Format p-values to 4 decimal places
+    final_results <- results %>%
+      mutate(across(c(p_NODF, p_Temp), ~sprintf("%.4f", .x)))
     
-    # Save the combined results for this folder
-    write_csv2(df_out,
-               file.path(lvl2,
-                         paste0("results_folder_", category2, ".csv")))
+    # Save individual results
+    output_file <- file.path(folder, paste0("nest_pvalue_", matrix_name, ".csv"))
+    write_csv(final_results, output_file)
     
-    # Store into our list for potential further aggregation
-    results_list[[paste(category1, category2, sep = "__")]] <- df_out
+    # Append to all_results
+    all_results <- bind_rows(all_results, final_results)
+    
+    # Log the results for this matrix
+    write(paste("Results for", matrix_name, ":"), log_file, append = TRUE)
+    write.table(final_results, log_file, append = TRUE, row.names = FALSE, quote = FALSE)
+    write("\n", log_file, append = TRUE)
+    
+    # Print progress
+    message(paste("Processed:", matrix_name))
+  } else {
+    warning(paste("Skipping", matrix_name, "- required files not found"))
+    write(paste("Skipping", matrix_name, "- required files not found"), log_file, append = TRUE)
   }
 }
 
-<<<<<<< HEAD
-# Combine all data frames into one final tibble (optional)
-all_results <- bind_rows(results_list)
+# Save all results to a single file
+write_csv(all_results, file.path(results_dir, "nest_pvalue_all.csv"))
 
-# Display the full results
-print(all_results, n = Inf)
-
-# write out full aggregation
-# write_csv2(all_results, "nestedness_results_all_levels.csv")
-=======
->>>>>>> ae67159f90d42ff506578ac3fd213217beb8296a
+# Print completion message
+message("Processing complete. Results saved to individual files and nest_pvalue_all.csv")
+write("\nProcessing complete.", log_file, append = TRUE)
