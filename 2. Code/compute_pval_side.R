@@ -6,20 +6,21 @@ library(tidyverse)
 # ==== 2. Data import and processing ====
 
 # Define paths
-code_dir <- "2. Code"
-results_dir <- "../4. Results dataset"  # Assuming "2. Code" is at same level as "4. Results dataset"
+code_dir <- getwd()  # Use current working directory instead of "2. Code"
+results_dir <- "2025_Global_Nestedness_Analysis/5. Test"
+
+# Create the log file in the current directory
+log_file <- "processing_log.txt"
+writeLines("Processing nestedness results...\n", log_file)
 
 # Get all nestedness folders
 nestedness_folders <- list.dirs(results_dir, recursive = TRUE) %>%
   keep(~str_detect(.x, "nestedness_")) %>%
-  discard(~str_detect(.x, "nestedness_something_we_dont_care_about"))  # Exclude the folder we don't care about
+  discard(~str_detect(.x, "sim_"))  # Exclude the folder we don't care about
 
 # Initialize an empty tibble to store all results
 all_results <- tibble()
 
-# Create a progress log file
-log_file <- file.path(code_dir, "processing_log.txt")
-writeLines("Processing nestedness results...\n", log_file)
 
 # Process each nestedness folder
 for (folder in nestedness_folders) {
