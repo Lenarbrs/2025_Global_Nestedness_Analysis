@@ -7,7 +7,7 @@
 - Koshevoy, Rebours - phoible: 70 matrices (70 families)
 - Dubourg, Morin - trivia: 3 matrices (3 themes)
 - Salali et al. - BaYaka plant knowledge: 2 matrices (same base, different treatment of NA)
-- Morin, Shobchuk - the shorlist effect (not in github): 30 in total, MovieLens -> 15 matrices (genre), Netflix -> 15 matrices (genre)
+- Morin, Shobchuk - the shorlist effect (not in github), subset (10% bigger repertoires, 70% most widespread films): 30 in total, MovieLens -> 15 matrices (genre), Netflix -> 15 matrices (genre)
 
 In total: 122 matrices
 
