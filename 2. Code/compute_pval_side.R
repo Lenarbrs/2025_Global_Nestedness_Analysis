@@ -3,10 +3,10 @@
 library(tidyverse)  # Load tidyverse for data manipulation
 
 # Load simulated statistics
-sims <- read_csv2("nest_simulated_mat_example_3_all.csv", show_col_types = FALSE)
+sims <- read_csv2("nest_simulated_americanhistory_all.csv", show_col_types = FALSE)
 
 # Load observed statistics and rename columns
-reals <- read_csv2("nest_summary_mat_example_3.csv", show_col_types = FALSE) %>%
+reals <- read_csv2("nest_summary_americanhistory.csv", show_col_types = FALSE) %>%
   select(
     matrix_id,
     obs_NODF = stat_nodf_general,  # Observed nestedness
@@ -69,6 +69,4 @@ final_results <- results %>%
 
 # Display full results
 print(final_results, n = Inf)
-
-
 
