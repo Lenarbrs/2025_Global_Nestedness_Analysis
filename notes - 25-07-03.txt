@@ -1,25 +1,23 @@
 Current steps :
 - journal de bord (later)
-- pre-registration (reu needed)
-- code skeleton + paralellisation (OK)
 - P-VALUE (OK for now)
-- subsets of big matrices (in progress)
+- visualisation
 
 Meeting update :
 - read héraldique paper (open data) voir TheNest |3|
 - think about visualization (for later, see down) |4|
 - gitstash |whenever|
-- Faire code pour p-values + significativité side |1| (OK), juste voir pour phoible
-- code pour subset des matrices comme the shortlist effect
-- ecrire sur le pre reg que subset movies et qu'on lache la grande matrice de phoible (+ justifier)
 
-Petites réfexions par rapport à la structure du dataset :
-- On rajoute le fill des matrices simulées ? (for now : NO)
-- le nb de lignes de colonnes des matrices simulées ? (car par exemple avec c0 il y a des colonnes qui peuvent avoir que des 0)
-- le nb de ligne / colonnes avec que des 0 dans les mat simulées
 
 Think about visualisation :
 - matrix size vs nestedness/anti-nestedness (categorical ? p continue ?)
 - fill vs nestedness
 - phoible plot
 - heatmaps (of what ?)
+
+RESULTS DATASET:
+For movie lens / netflix: we do not have the results (matrices are too big)
+For phoible: we have all the matrices except Atlantic Congo (big matrice, it works but takes time)
+For archeology: we have everything excpet a baseline for "compiene"
+For plant knowledge: we have everything
+For trivia: we have everything
