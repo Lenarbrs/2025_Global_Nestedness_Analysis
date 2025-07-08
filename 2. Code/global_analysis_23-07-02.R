@@ -197,16 +197,26 @@ nestedness_analysis <- function(matrix, matrix_id, N_ITER_) {
 
 
 ## ==== 4. Test ====
-# mat_example <- matrix(c(
-#   1, 1, 1, 1,
-#   1, 1, 0, 0,
-#   1, 0, 1, 0,
-#   1, 0, 0, 1,
-#   0, 1, 0, 1
-# ), nrow = 5, byrow = TRUE)
-# 
-# nestedness_analysis(mat_example, "test1", N_ITER_ = 10)
+mat_example <- matrix(c(
+  1, 1, 1, 1,
+  1, 1, 0, 0,
+  1, 0, 1, 0,
+  1, 0, 0, 1,
+  0, 1, 0, 1
+), nrow = 5, byrow = TRUE)
 
+#nestedness_analysis(mat_example, "test1", N_ITER_ = 10)
+
+inventory_size <- rowSums(mat_example)
+print(inventory_size)
+prevalence <- colSums(mat_example)
+print(prevalence)
+avg_inventory <- colSums(mat_example * inventory_size)/prevalence
+print(mat_example * inventory_size)
+print(colSums(mat_example * inventory_size))
+print(avg_inventory)
+print(cor(prevalence, avg_inventory))
+print(cor(avg_inventory, prevalence))
 
 ## ==== 5. Apply function to real matrices ====
 # Set folder path

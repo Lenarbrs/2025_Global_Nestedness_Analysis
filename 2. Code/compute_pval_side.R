@@ -5,9 +5,24 @@
 # Load tidyverse
 library(tidyverse)
 
+<<<<<<< HEAD
 # Function to compute a two‐tailed p‐value
 # obs = one observed statistic
 # sims = vector of simulated statistics
+=======
+# Load simulated statistics
+sims <- read_csv2("nest_simulated_americanhistory_all.csv", show_col_types = FALSE)
+
+# Load observed statistics and rename columns
+reals <- read_csv2("nest_summary_americanhistory.csv", show_col_types = FALSE) %>%
+  select(
+    matrix_id,
+    obs_NODF = stat_nodf_general,  # Observed nestedness
+    obs_Temp = stat_temp           # Observed temperature
+  )
+
+# Function to compute two-tailed (bilateral) p-value
+>>>>>>> ae67159f90d42ff506578ac3fd213217beb8296a
 compute_pval <- function(obs, sims) {
   n_total   <- length(sims)   # total number of sims
   n_greater <- sum(sims >= obs)   # sims at or above obs
@@ -112,6 +127,7 @@ for (lvl1 in level1_dirs) {
   }
 }
 
+<<<<<<< HEAD
 # Combine all data frames into one final tibble (optional)
 all_results <- bind_rows(results_list)
 
@@ -120,3 +136,5 @@ print(all_results, n = Inf)
 
 # write out full aggregation
 # write_csv2(all_results, "nestedness_results_all_levels.csv")
+=======
+>>>>>>> ae67159f90d42ff506578ac3fd213217beb8296a
