@@ -1,9 +1,0 @@
-matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
-mat_example_1,c0,0.8000,1.0000,antinested,equal
-mat_example_1,c1,0.6000,0.6000,antinested,nested
-mat_example_1,curveball,0.6000,0.6000,antinested,nested
-mat_example_1,r0,0.4000,0.2000,antinested,antinested
-mat_example_1,r00,1.0000,0.8000,antinested,antinested
-mat_example_1,r1,0.6000,1.0000,antinested,antinested
-mat_example_1,r2,0.8000,1.0000,antinested,antinested
-mat_example_1,swap,1.0000,1.0000,antinested,nested
