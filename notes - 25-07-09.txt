@@ -11,9 +11,9 @@ Meeting update :
 
 Think about visualisation :
 - matrix size vs nestedness/anti-nestedness (categorical ? p continue ?)
-- fill vs nestedness
+- fill vs nestedness --> scatter (coleur = groupe) : 1 scatter par baseline*metric
 - phoible plot
-- heatmaps (of what ?)
+- heatmaps (of what ?) --> each matrix : baseline * metric (color = side)
 
 RESULTS DATASET:
 For movie lens / netflix: we do not have the results (matrices are too big)
