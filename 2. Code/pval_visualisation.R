@@ -101,3 +101,56 @@ ggsave("significance_agreement_plot.png", plot, width = 8, height = 6)
 # Display the plot
 print(plot)
 
+library(tidyverse)
+library(ggplot2)
+library(viridis)  # For better color scales
+
+# Read the consolidated results file
+results <- read_csv("nest_pvalue_all.csv") %>%
+  mutate(p_NODF = as.numeric(p_NODF),
+         p_Temp = as.numeric(p_Temp))
+
+# Get unique matrix IDs
+matrix_ids <- unique(results$matrix_id)
+
+# Create a heatmap for each matrix
+for (matrix_id in matrix_ids) {
+  # Filter data for current matrix
+  matrix_data <- results %>%
+    filter(matrix_id == !!matrix_id) %>%
+    select(baseline, p_NODF, p_Temp) %>%
+    pivot_longer(cols = c(p_NODF, p_Temp),
+                 names_to = "metric",
+                 values_to = "p_value") %>%
+    mutate(metric = recode(metric,
+                           "p_NODF" = "NODF",
+                           "p_Temp" = "TEMP"),
+           baseline = as.factor(baseline))
+  
+  # Create heatmap
+  heatmap <- ggplot(matrix_data, aes(x = metric, y = baseline, fill = p_value)) +
+    geom_tile(color = "white", linewidth = 0.5) +
+    geom_text(aes(label = sprintf("%.3f", p_value)), color = "white", size = 3) +
+    scale_fill_viridis(option = "plasma", direction = -1, limits = c(0, 1)) +
+    labs(title = paste("P-values for Matrix:", matrix_id),
+         x = "Metric",
+         y = "Baseline",
+         fill = "P-value") +
+    theme_minimal() +
+    theme(axis.text.x = element_text(angle = 0, hjust = 0.5),
+          plot.title = element_text(hjust = 0.5),
+          panel.grid = element_blank())
+  
+  # Save heatmap
+  ggsave(paste0("heatmap_", matrix_id, ".png"), 
+         heatmap, 
+         width = 6, 
+         height = 6,
+         dpi = 300)
+  
+  # Print progress
+  message(paste("Created heatmap for matrix:", matrix_id))
+}
+
+message("All heatmaps created successfully!")
+
