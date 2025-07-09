@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Gunwinyguan,c0,0.0000,0.0240,antinested,antinested
+Gunwinyguan,c1,0.0000,0.0140,antinested,antinested
+Gunwinyguan,curveball,0.0020,0.0100,antinested,antinested
+Gunwinyguan,r0,0.0000,0.0000,nested,nested
+Gunwinyguan,r00,0.0000,0.0000,nested,nested
+Gunwinyguan,r1,0.7760,0.2840,nested,antinested
+Gunwinyguan,r2,0.0000,0.0000,nested,antinested
+Gunwinyguan,swap,0.0060,0.0460,antinested,antinested

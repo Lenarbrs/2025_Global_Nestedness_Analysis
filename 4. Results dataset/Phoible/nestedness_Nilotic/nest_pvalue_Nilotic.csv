@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nilotic,c0,0.0000,0.0000,nested,nested
+Nilotic,c1,0.0340,0.0000,nested,nested
+Nilotic,curveball,0.0020,0.3440,antinested,nested
+Nilotic,r0,0.0000,0.0000,nested,nested
+Nilotic,r00,0.0000,0.0000,nested,nested
+Nilotic,r1,0.0000,0.0000,nested,nested
+Nilotic,r2,0.0000,0.0000,nested,antinested
+Nilotic,swap,0.0000,0.4560,antinested,nested

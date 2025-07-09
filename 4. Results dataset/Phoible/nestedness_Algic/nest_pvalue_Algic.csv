@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Algic,c0,0.5100,0.0000,antinested,nested
+Algic,c1,0.0860,0.1220,antinested,nested
+Algic,curveball,0.0040,0.0820,antinested,nested
+Algic,r0,0.0000,0.4140,nested,nested
+Algic,r00,0.0000,0.0300,nested,nested
+Algic,r1,0.0000,0.0160,nested,antinested
+Algic,r2,0.0000,0.0000,nested,antinested
+Algic,swap,0.0100,0.1380,antinested,nested

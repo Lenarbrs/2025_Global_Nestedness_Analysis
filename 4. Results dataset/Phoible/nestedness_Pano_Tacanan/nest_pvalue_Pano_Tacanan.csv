@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Pano_Tacanan,c0,0.0060,0.8320,antinested,antinested
+Pano_Tacanan,c1,0.0020,0.6960,antinested,antinested
+Pano_Tacanan,curveball,0.1140,0.0160,antinested,nested
+Pano_Tacanan,r0,0.0000,0.0000,nested,nested
+Pano_Tacanan,r00,0.0000,0.0000,nested,nested
+Pano_Tacanan,r1,0.0000,0.0000,nested,nested
+Pano_Tacanan,r2,0.0000,0.0000,nested,antinested
+Pano_Tacanan,swap,0.0980,0.0040,antinested,nested

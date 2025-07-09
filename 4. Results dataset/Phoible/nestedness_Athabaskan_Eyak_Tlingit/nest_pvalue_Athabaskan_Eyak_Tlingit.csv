@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Athabaskan_Eyak_Tlingit,c0,0.1220,0.0000,antinested,nested
+Athabaskan_Eyak_Tlingit,c1,0.0100,0.0720,antinested,nested
+Athabaskan_Eyak_Tlingit,curveball,0.0000,0.0000,antinested,nested
+Athabaskan_Eyak_Tlingit,r0,0.0000,0.0000,nested,nested
+Athabaskan_Eyak_Tlingit,r00,0.0000,0.0000,nested,nested
+Athabaskan_Eyak_Tlingit,r1,0.0000,0.0060,nested,antinested
+Athabaskan_Eyak_Tlingit,r2,0.0000,0.0000,nested,antinested
+Athabaskan_Eyak_Tlingit,swap,0.0040,0.0000,antinested,nested

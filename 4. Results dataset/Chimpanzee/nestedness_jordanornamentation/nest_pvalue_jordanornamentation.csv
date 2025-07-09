@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+jordanshennanornamentation,c0,0.3120,0.0000,antinested,nested
+jordanshennanornamentation,c1,0.0940,0.8940,antinested,antinested
+jordanshennanornamentation,curveball,0.0160,0.9600,antinested,nested
+jordanshennanornamentation,r0,0.0000,0.0000,nested,nested
+jordanshennanornamentation,r00,0.0000,0.0000,nested,nested
+jordanshennanornamentation,r1,0.0140,0.0980,nested,nested
+jordanshennanornamentation,r2,0.0020,0.0000,antinested,antinested
+jordanshennanornamentation,swap,0.0200,0.9120,antinested,nested

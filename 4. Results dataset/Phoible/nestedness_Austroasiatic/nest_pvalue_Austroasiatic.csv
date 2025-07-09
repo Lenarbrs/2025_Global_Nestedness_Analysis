@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Austroasiatic,c0,0.0000,0.0000,nested,nested
+Austroasiatic,c1,0.1480,0.0000,nested,nested
+Austroasiatic,curveball,0.0060,0.0040,antinested,nested
+Austroasiatic,r0,0.0000,0.0000,nested,nested
+Austroasiatic,r00,0.0000,0.0000,nested,nested
+Austroasiatic,r1,0.0000,0.0000,nested,nested
+Austroasiatic,r2,0.0000,0.0000,nested,antinested
+Austroasiatic,swap,0.0280,0.0260,antinested,nested

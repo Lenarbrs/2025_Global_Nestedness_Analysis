@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Koman,c0,0.8160,0.8720,nested,nested
+Koman,c1,0.8740,0.8500,nested,nested
+Koman,curveball,0.4040,0.7080,nested,nested
+Koman,r0,0.0120,0.0260,antinested,nested
+Koman,r00,0.0040,0.2720,antinested,nested
+Koman,r1,0.1660,0.2340,antinested,nested
+Koman,r2,0.9560,0.8680,nested,antinested
+Koman,swap,0.5340,0.7620,nested,nested

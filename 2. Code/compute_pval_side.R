@@ -7,7 +7,7 @@ library(tidyverse)
 
 # Define paths
 code_dir <- getwd()  # Use current working directory instead of "2. Code"
-results_dir <- "2025_Global_Nestedness_Analysis/5. Test"
+results_dir <- "4. Results dataset"
 
 # Create the log file in the current directory
 log_file <- "processing_log.txt"

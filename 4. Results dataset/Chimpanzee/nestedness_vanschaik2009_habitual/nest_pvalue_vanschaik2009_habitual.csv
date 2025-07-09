@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+vanschaik2009_habitualcustomary_only,c0,0.1380,0.2800,nested,nested
+vanschaik2009_habitualcustomary_only,c1,0.9280,0.7980,antinested,antinested
+vanschaik2009_habitualcustomary_only,curveball,0.4240,0.8160,nested,nested
+vanschaik2009_habitualcustomary_only,r0,0.0000,0.1260,nested,antinested
+vanschaik2009_habitualcustomary_only,r00,0.0020,0.5900,nested,antinested
+vanschaik2009_habitualcustomary_only,r1,0.0000,0.0040,nested,antinested
+vanschaik2009_habitualcustomary_only,r2,0.0000,0.0000,nested,antinested
+vanschaik2009_habitualcustomary_only,swap,0.3140,0.8720,nested,nested

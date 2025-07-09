@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Yanomamic,c0,0.5140,0.0040,nested,nested
+Yanomamic,c1,0.9560,0.0480,nested,nested
+Yanomamic,curveball,0.0080,0.5180,antinested,antinested
+Yanomamic,r0,0.4480,0.1440,nested,nested
+Yanomamic,r00,0.0840,0.0000,nested,nested
+Yanomamic,r1,0.7540,0.7720,nested,nested
+Yanomamic,r2,0.6960,0.1700,nested,antinested
+Yanomamic,swap,0.0080,0.7120,antinested,antinested

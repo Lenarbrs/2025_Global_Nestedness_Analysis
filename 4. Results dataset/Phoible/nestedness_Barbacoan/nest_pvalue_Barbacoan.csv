@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Barbacoan,c0,0.8380,0.9420,nested,antinested
+Barbacoan,c1,0.9960,0.7480,nested,antinested
+Barbacoan,curveball,0.7260,0.9720,nested,nested
+Barbacoan,r0,0.0000,0.4180,nested,antinested
+Barbacoan,r00,0.0040,0.4360,nested,antinested
+Barbacoan,r1,0.0000,0.0140,nested,antinested
+Barbacoan,r2,0.0000,0.0000,nested,antinested
+Barbacoan,swap,0.6800,0.8320,nested,antinested

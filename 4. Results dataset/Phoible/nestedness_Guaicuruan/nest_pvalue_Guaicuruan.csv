@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Guaicuruan,c0,0.0000,0.6520,antinested,nested
+Guaicuruan,c1,0.0000,0.8980,antinested,antinested
+Guaicuruan,curveball,0.0000,0.0120,antinested,antinested
+Guaicuruan,r0,0.2160,0.0380,nested,nested
+Guaicuruan,r00,0.1600,0.0240,nested,nested
+Guaicuruan,r1,0.5740,0.2440,nested,antinested
+Guaicuruan,r2,0.0180,0.0000,nested,antinested
+Guaicuruan,swap,0.0040,0.0100,antinested,antinested

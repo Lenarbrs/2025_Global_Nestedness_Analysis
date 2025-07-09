@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Otomanguean,c0,0.0000,0.0000,nested,nested
+Otomanguean,c1,0.1880,0.0020,nested,nested
+Otomanguean,curveball,0.0020,0.0020,antinested,nested
+Otomanguean,r0,0.0000,0.0000,nested,nested
+Otomanguean,r00,0.0000,0.0000,nested,nested
+Otomanguean,r1,0.0000,0.5900,nested,nested
+Otomanguean,r2,0.0000,0.0000,nested,antinested
+Otomanguean,swap,0.0200,0.0580,antinested,nested

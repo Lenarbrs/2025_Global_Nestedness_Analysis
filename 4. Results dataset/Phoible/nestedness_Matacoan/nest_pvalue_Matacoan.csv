@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Matacoan,c0,0.0000,0.3080,antinested,antinested
+Matacoan,c1,0.0000,0.1860,antinested,antinested
+Matacoan,curveball,0.0060,0.0020,antinested,antinested
+Matacoan,r0,0.3820,0.5620,nested,antinested
+Matacoan,r00,0.2920,0.9800,nested,nested
+Matacoan,r1,0.4920,0.0100,nested,antinested
+Matacoan,r2,0.0260,0.0000,nested,antinested
+Matacoan,swap,0.0000,0.0000,antinested,antinested

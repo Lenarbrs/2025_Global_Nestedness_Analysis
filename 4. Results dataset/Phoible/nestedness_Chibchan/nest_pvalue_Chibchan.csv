@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Chibchan,c0,0.0340,0.0060,nested,nested
+Chibchan,c1,0.4780,0.1260,nested,nested
+Chibchan,curveball,0.3320,0.0220,antinested,nested
+Chibchan,r0,0.0000,0.0000,nested,nested
+Chibchan,r00,0.0000,0.0000,nested,nested
+Chibchan,r1,0.0000,0.4120,nested,nested
+Chibchan,r2,0.0000,0.0000,nested,antinested
+Chibchan,swap,0.2880,0.0400,antinested,nested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Kartvelian,c0,0.0000,0.2820,antinested,nested
+Kartvelian,c1,0.0000,0.5220,antinested,nested
+Kartvelian,curveball,0.0000,0.5320,antinested,antinested
+Kartvelian,r0,0.0100,0.0900,nested,nested
+Kartvelian,r00,0.0100,0.0740,nested,nested
+Kartvelian,r1,0.0240,0.1140,nested,antinested
+Kartvelian,r2,0.0000,0.0000,nested,antinested
+Kartvelian,swap,0.0000,0.7020,antinested,antinested

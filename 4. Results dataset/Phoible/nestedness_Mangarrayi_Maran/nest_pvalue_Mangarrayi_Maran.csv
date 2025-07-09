@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Mangarrayi_Maran,c0,0.0000,0.2680,antinested,antinested
+Mangarrayi_Maran,c1,0.0000,0.2620,antinested,antinested
+Mangarrayi_Maran,curveball,0.0040,0.0040,antinested,antinested
+Mangarrayi_Maran,r0,0.8240,0.3620,antinested,nested
+Mangarrayi_Maran,r00,0.8760,0.4100,antinested,nested
+Mangarrayi_Maran,r1,0.6520,0.1960,antinested,antinested
+Mangarrayi_Maran,r2,0.0760,0.0000,nested,antinested
+Mangarrayi_Maran,swap,0.0000,0.0000,antinested,antinested

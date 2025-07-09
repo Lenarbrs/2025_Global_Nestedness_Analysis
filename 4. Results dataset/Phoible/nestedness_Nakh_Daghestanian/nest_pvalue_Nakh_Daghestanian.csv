@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nakh_Daghestanian,c0,0.0000,0.0000,nested,nested
+Nakh_Daghestanian,c1,0.5280,0.0040,nested,nested
+Nakh_Daghestanian,curveball,0.0040,0.0020,antinested,nested
+Nakh_Daghestanian,r0,0.0000,0.0000,nested,nested
+Nakh_Daghestanian,r00,0.0000,0.0000,nested,nested
+Nakh_Daghestanian,r1,0.0000,0.1300,nested,antinested
+Nakh_Daghestanian,r2,0.0000,0.0000,nested,antinested
+Nakh_Daghestanian,swap,0.0080,0.0080,antinested,nested

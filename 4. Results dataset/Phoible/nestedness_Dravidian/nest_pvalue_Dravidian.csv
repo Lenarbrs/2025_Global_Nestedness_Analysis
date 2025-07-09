@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Dravidian,c0,0.0000,0.0000,nested,nested
+Dravidian,c1,0.0000,0.0000,nested,nested
+Dravidian,curveball,0.9300,0.0440,antinested,nested
+Dravidian,r0,0.0000,0.0000,nested,nested
+Dravidian,r00,0.0000,0.0000,nested,nested
+Dravidian,r1,0.0000,0.0000,nested,nested
+Dravidian,r2,0.0000,0.0000,nested,antinested
+Dravidian,swap,0.5460,0.0920,antinested,nested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Iroquoian,c0,0.6240,0.8040,antinested,antinested
+Iroquoian,c1,0.4800,0.6360,antinested,antinested
+Iroquoian,curveball,0.8340,0.3700,antinested,nested
+Iroquoian,r0,0.0000,0.1460,nested,antinested
+Iroquoian,r00,0.0040,0.1060,nested,antinested
+Iroquoian,r1,0.0000,0.0020,nested,antinested
+Iroquoian,r2,0.0000,0.0000,nested,antinested
+Iroquoian,swap,0.6380,0.3300,antinested,nested

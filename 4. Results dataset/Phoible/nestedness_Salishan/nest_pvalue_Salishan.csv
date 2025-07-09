@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Salishan,c0,0.0000,0.0060,antinested,nested
+Salishan,c1,0.0000,0.1200,antinested,nested
+Salishan,curveball,0.0000,0.0020,antinested,nested
+Salishan,r0,0.0000,0.0000,nested,nested
+Salishan,r00,0.0000,0.0000,nested,nested
+Salishan,r1,0.0000,0.5840,nested,nested
+Salishan,r2,0.0000,0.0000,nested,antinested
+Salishan,swap,0.0060,0.0540,antinested,nested

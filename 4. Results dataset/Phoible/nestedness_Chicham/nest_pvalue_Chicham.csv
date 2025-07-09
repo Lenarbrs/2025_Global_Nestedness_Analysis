@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Chicham,c0,0.1660,0.3660,nested,nested
+Chicham,c1,0.2240,0.4040,nested,nested
+Chicham,curveball,0.7080,0.6840,nested,antinested
+Chicham,r0,0.8420,0.0940,antinested,nested
+Chicham,r00,0.8800,0.0920,antinested,nested
+Chicham,r1,0.7440,0.9440,antinested,antinested
+Chicham,r2,0.1820,0.0300,nested,antinested
+Chicham,swap,0.6960,0.6680,nested,antinested

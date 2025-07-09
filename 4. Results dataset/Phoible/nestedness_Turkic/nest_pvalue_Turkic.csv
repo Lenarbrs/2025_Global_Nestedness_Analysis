@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Turkic,c0,0.0060,0.0000,antinested,nested
+Turkic,c1,0.0000,0.0000,antinested,nested
+Turkic,curveball,0.0040,0.0000,antinested,nested
+Turkic,r0,0.0000,0.0000,nested,nested
+Turkic,r00,0.0000,0.0000,nested,nested
+Turkic,r1,0.0000,0.0000,nested,nested
+Turkic,r2,0.0000,0.0000,nested,antinested
+Turkic,swap,0.0000,0.0020,antinested,nested

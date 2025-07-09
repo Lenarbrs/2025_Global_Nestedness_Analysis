@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Guahiboan,c0,0.0000,0.5780,antinested,antinested
+Guahiboan,c1,0.0000,0.4840,antinested,antinested
+Guahiboan,curveball,0.0020,0.0040,antinested,antinested
+Guahiboan,r0,0.0800,0.5180,nested,nested
+Guahiboan,r00,0.0980,0.4020,nested,nested
+Guahiboan,r1,0.1320,0.1220,nested,antinested
+Guahiboan,r2,0.0020,0.0000,nested,antinested
+Guahiboan,swap,0.0000,0.0000,antinested,antinested

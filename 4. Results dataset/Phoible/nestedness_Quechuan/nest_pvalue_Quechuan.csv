@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Quechuan,c0,0.0180,0.0000,nested,nested
+Quechuan,c1,0.4120,0.0000,nested,nested
+Quechuan,curveball,0.0000,0.0200,antinested,nested
+Quechuan,r0,0.0000,0.0000,nested,nested
+Quechuan,r00,0.0000,0.0000,nested,nested
+Quechuan,r1,0.0000,0.0000,nested,nested
+Quechuan,r2,0.0000,0.0000,nested,antinested
+Quechuan,swap,0.0000,0.0160,antinested,nested

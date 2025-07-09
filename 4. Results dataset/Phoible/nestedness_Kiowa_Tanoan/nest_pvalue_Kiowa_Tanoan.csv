@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Kiowa_Tanoan,c0,0.1580,0.0080,antinested,nested
+Kiowa_Tanoan,c1,0.0240,0.1340,antinested,nested
+Kiowa_Tanoan,curveball,0.0000,0.0000,antinested,nested
+Kiowa_Tanoan,r0,0.0000,0.7880,nested,antinested
+Kiowa_Tanoan,r00,0.0000,0.2000,nested,nested
+Kiowa_Tanoan,r1,0.0000,0.0000,nested,antinested
+Kiowa_Tanoan,r2,0.0000,0.0000,nested,antinested
+Kiowa_Tanoan,swap,0.0000,0.0020,antinested,nested

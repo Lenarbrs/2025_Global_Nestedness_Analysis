@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Eskimo_Aleut,c0,0.9580,0.2680,antinested,nested
+Eskimo_Aleut,c1,0.4800,0.7700,antinested,nested
+Eskimo_Aleut,curveball,0.0280,0.0900,antinested,antinested
+Eskimo_Aleut,r0,0.0000,0.8120,nested,nested
+Eskimo_Aleut,r00,0.0000,0.3300,nested,nested
+Eskimo_Aleut,r1,0.0000,0.0140,nested,antinested
+Eskimo_Aleut,r2,0.0000,0.0000,nested,antinested
+Eskimo_Aleut,swap,0.0460,0.1240,antinested,antinested

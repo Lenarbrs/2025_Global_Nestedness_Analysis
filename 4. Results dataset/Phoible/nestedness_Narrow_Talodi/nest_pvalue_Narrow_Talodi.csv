@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Narrow_Talodi,c0,0.0160,0.0620,antinested,nested
+Narrow_Talodi,c1,0.0040,0.3660,antinested,nested
+Narrow_Talodi,curveball,0.0000,0.0020,antinested,antinested
+Narrow_Talodi,r0,0.0260,0.0120,nested,nested
+Narrow_Talodi,r00,0.0020,0.0000,nested,nested
+Narrow_Talodi,r1,0.3420,0.6460,nested,antinested
+Narrow_Talodi,r2,0.0540,0.0000,nested,antinested
+Narrow_Talodi,swap,0.0000,0.0000,antinested,antinested

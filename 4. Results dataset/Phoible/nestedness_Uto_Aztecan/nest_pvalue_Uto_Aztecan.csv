@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Uto_Aztecan,c0,0.0000,0.0000,nested,nested
+Uto_Aztecan,c1,0.4220,0.1360,nested,nested
+Uto_Aztecan,curveball,0.0360,0.7220,antinested,antinested
+Uto_Aztecan,r0,0.0000,0.0000,nested,nested
+Uto_Aztecan,r00,0.0000,0.0000,nested,nested
+Uto_Aztecan,r1,0.0000,0.7460,nested,antinested
+Uto_Aztecan,r2,0.0000,0.0000,nested,antinested
+Uto_Aztecan,swap,0.0580,0.8360,antinested,antinested

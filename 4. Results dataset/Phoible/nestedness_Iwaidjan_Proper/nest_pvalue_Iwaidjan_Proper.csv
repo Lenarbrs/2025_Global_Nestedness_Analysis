@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Iwaidjan_Proper,c0,0.0000,0.0000,antinested,antinested
+Iwaidjan_Proper,c1,0.0000,0.0000,antinested,antinested
+Iwaidjan_Proper,curveball,0.0040,0.0040,antinested,antinested
+Iwaidjan_Proper,r0,0.0420,0.0140,antinested,nested
+Iwaidjan_Proper,r00,0.0300,0.5360,antinested,antinested
+Iwaidjan_Proper,r1,0.0960,0.9260,antinested,antinested
+Iwaidjan_Proper,r2,0.1740,0.0000,nested,antinested
+Iwaidjan_Proper,swap,0.0000,0.0000,antinested,antinested

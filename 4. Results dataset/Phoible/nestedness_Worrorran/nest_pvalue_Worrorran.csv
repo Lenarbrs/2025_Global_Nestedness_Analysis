@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Worrorran,c0,0.4880,1.0000,antinested,antinested
+Worrorran,c1,0.4320,0.9160,antinested,antinested
+Worrorran,curveball,0.0180,0.0040,antinested,antinested
+Worrorran,r0,0.0000,0.0020,antinested,nested
+Worrorran,r00,0.0000,0.0380,antinested,nested
+Worrorran,r1,0.0000,0.5660,antinested,nested
+Worrorran,r2,0.0080,0.0200,antinested,antinested
+Worrorran,swap,0.0140,0.0000,antinested,antinested

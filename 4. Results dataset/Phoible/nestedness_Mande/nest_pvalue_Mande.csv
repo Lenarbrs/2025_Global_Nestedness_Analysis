@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Mande,c0,0.0000,0.0000,nested,nested
+Mande,c1,0.0000,0.0000,nested,nested
+Mande,curveball,0.0000,0.0080,antinested,nested
+Mande,r0,0.0000,0.0000,nested,nested
+Mande,r00,0.0000,0.0000,nested,nested
+Mande,r1,0.0000,0.0000,nested,nested
+Mande,r2,0.0000,0.0020,nested,antinested
+Mande,swap,0.0060,0.0000,antinested,nested

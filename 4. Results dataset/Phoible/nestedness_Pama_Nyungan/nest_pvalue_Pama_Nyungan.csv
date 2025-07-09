@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Pama_Nyungan,c0,0.0040,0.0000,nested,nested
+Pama_Nyungan,c1,0.0740,0.0000,antinested,nested
+Pama_Nyungan,curveball,0.0120,0.0020,antinested,nested
+Pama_Nyungan,r0,0.0000,0.0000,nested,nested
+Pama_Nyungan,r00,0.0000,0.0000,nested,nested
+Pama_Nyungan,r1,0.0000,0.0000,nested,nested
+Pama_Nyungan,r2,0.0000,0.0000,antinested,antinested
+Pama_Nyungan,swap,0.0040,0.0020,antinested,nested

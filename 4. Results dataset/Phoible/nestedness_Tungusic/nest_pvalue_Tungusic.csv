@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Tungusic,c0,0.3240,0.0380,nested,nested
+Tungusic,c1,0.8780,0.4960,antinested,nested
+Tungusic,curveball,0.0420,0.4540,antinested,nested
+Tungusic,r0,0.0000,0.5880,nested,antinested
+Tungusic,r00,0.0000,0.5360,nested,nested
+Tungusic,r1,0.0000,0.0000,nested,antinested
+Tungusic,r2,0.0000,0.0000,nested,antinested
+Tungusic,swap,0.0480,0.5860,antinested,nested

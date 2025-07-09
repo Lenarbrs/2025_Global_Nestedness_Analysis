@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Muskogean,c0,0.0080,0.8160,antinested,antinested
+Muskogean,c1,0.0020,0.5240,antinested,antinested
+Muskogean,curveball,0.0060,0.0060,antinested,antinested
+Muskogean,r0,0.0440,0.7340,nested,nested
+Muskogean,r00,0.0400,0.5700,nested,nested
+Muskogean,r1,0.0780,0.1200,nested,antinested
+Muskogean,r2,0.0040,0.0000,nested,antinested
+Muskogean,swap,0.0020,0.0060,antinested,antinested

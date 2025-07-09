@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+boves,c0,0.2640,0.0500,antinested,nested
+boves,c1,0.3180,0.0560,antinested,nested
+boves,curveball,0.4640,0.4640,antinested,nested
+boves,r0,0.1360,0.0540,antinested,nested
+boves,r00,0.3000,0.0180,antinested,nested
+boves,r1,0.1640,0.0720,antinested,nested
+boves,r2,0.1840,0.0900,antinested,nested
+boves,swap,0.5780,0.5780,antinested,nested

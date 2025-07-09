@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+whiten_habitualcustomary_only,c0,0.0000,0.0000,nested,nested
+whiten_habitualcustomary_only,c1,0.3120,0.2720,nested,nested
+whiten_habitualcustomary_only,curveball,0.8640,0.2280,antinested,nested
+whiten_habitualcustomary_only,r0,0.0000,0.2860,nested,nested
+whiten_habitualcustomary_only,r00,0.0000,0.0140,nested,nested
+whiten_habitualcustomary_only,r1,0.0020,0.1980,nested,antinested
+whiten_habitualcustomary_only,r2,0.0020,0.0000,nested,antinested
+whiten_habitualcustomary_only,swap,0.6120,0.3420,antinested,nested

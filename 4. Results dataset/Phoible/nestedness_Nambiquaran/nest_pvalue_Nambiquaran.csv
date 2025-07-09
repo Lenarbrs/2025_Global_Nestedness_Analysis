@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nambiquaran,c0,0.0000,0.0000,antinested,nested
+Nambiquaran,c1,0.0000,0.0140,antinested,nested
+Nambiquaran,curveball,0.0000,0.0000,antinested,antinested
+Nambiquaran,r0,0.1300,0.0000,nested,nested
+Nambiquaran,r00,0.0020,0.0000,nested,nested
+Nambiquaran,r1,0.7000,0.6660,nested,antinested
+Nambiquaran,r2,0.1400,0.0000,nested,antinested
+Nambiquaran,swap,0.0000,0.0000,antinested,antinested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Huitotoan,c0,0.3500,0.1000,antinested,nested
+Huitotoan,c1,0.2580,0.3140,antinested,nested
+Huitotoan,curveball,0.0000,0.0000,antinested,antinested
+Huitotoan,r0,0.0340,0.3860,nested,nested
+Huitotoan,r00,0.0020,0.0220,nested,nested
+Huitotoan,r1,0.1440,0.2940,nested,antinested
+Huitotoan,r2,0.0080,0.0000,nested,antinested
+Huitotoan,swap,0.0000,0.0000,antinested,antinested

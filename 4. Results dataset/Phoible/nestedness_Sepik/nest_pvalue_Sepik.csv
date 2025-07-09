@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Sepik,c0,0.0000,0.0020,nested,nested
+Sepik,c1,0.0960,0.0860,nested,nested
+Sepik,curveball,0.3760,0.0240,nested,nested
+Sepik,r0,0.0000,0.0000,nested,nested
+Sepik,r00,0.0000,0.0000,nested,nested
+Sepik,r1,0.0000,0.8540,nested,antinested
+Sepik,r2,0.0000,0.0000,nested,antinested
+Sepik,swap,0.1700,0.0020,nested,nested

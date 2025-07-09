@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nuclear_Macro_Je,c0,0.0000,0.0000,nested,nested
+Nuclear_Macro_Je,c1,0.0960,0.0000,nested,nested
+Nuclear_Macro_Je,curveball,0.0060,0.9900,antinested,antinested
+Nuclear_Macro_Je,r0,0.0000,0.0000,nested,nested
+Nuclear_Macro_Je,r00,0.0000,0.0000,nested,nested
+Nuclear_Macro_Je,r1,0.0000,0.0000,nested,nested
+Nuclear_Macro_Je,r2,0.0000,0.0000,nested,antinested
+Nuclear_Macro_Je,swap,0.0000,0.6780,antinested,nested

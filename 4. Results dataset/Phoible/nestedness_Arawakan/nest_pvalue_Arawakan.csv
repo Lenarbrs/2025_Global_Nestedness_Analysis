@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Arawakan,c0,0.0100,0.0000,nested,nested
+Arawakan,c1,0.6020,0.0000,nested,nested
+Arawakan,curveball,0.0020,0.0140,antinested,nested
+Arawakan,r0,0.0000,0.0000,nested,nested
+Arawakan,r00,0.0000,0.0000,nested,nested
+Arawakan,r1,0.0000,0.0000,nested,nested
+Arawakan,r2,0.0000,0.0000,nested,antinested
+Arawakan,swap,0.0000,0.0080,antinested,nested

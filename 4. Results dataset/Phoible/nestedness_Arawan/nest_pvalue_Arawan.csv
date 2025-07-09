@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Arawan,c0,0.0120,0.5880,antinested,nested
+Arawan,c1,0.0140,0.8240,antinested,nested
+Arawan,curveball,0.0060,0.9380,antinested,antinested
+Arawan,r0,0.0020,0.0460,nested,nested
+Arawan,r00,0.0080,0.0920,nested,nested
+Arawan,r1,0.0360,0.5080,nested,antinested
+Arawan,r2,0.0060,0.0000,nested,antinested
+Arawan,swap,0.0040,0.9580,antinested,antinested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Songhay,c0,0.0440,0.0000,nested,nested
+Songhay,c1,0.5720,0.0020,nested,nested
+Songhay,curveball,0.0000,0.0500,antinested,antinested
+Songhay,r0,0.0180,0.1220,nested,nested
+Songhay,r00,0.0000,0.0000,nested,nested
+Songhay,r1,0.0820,0.1600,nested,antinested
+Songhay,r2,0.0040,0.0000,nested,antinested
+Songhay,swap,0.0020,0.0560,antinested,antinested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+vanschaik2009_unk_absent,c0,0.2260,0.0340,nested,nested
+vanschaik2009_unk_absent,c1,0.7980,0.7040,antinested,nested
+vanschaik2009_unk_absent,curveball,0.3420,0.6560,antinested,nested
+vanschaik2009_unk_absent,r0,0.0240,0.2520,nested,nested
+vanschaik2009_unk_absent,r00,0.0060,0.0420,nested,nested
+vanschaik2009_unk_absent,r1,0.3300,0.2720,nested,antinested
+vanschaik2009_unk_absent,r2,0.2780,0.0000,nested,antinested
+vanschaik2009_unk_absent,swap,0.0560,0.8860,antinested,nested

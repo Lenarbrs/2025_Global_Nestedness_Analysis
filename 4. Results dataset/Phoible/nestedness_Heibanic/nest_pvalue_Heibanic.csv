@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Heibanic,c0,0.0000,0.1340,antinested,nested
+Heibanic,c1,0.0000,0.4320,antinested,nested
+Heibanic,curveball,0.0000,0.0240,antinested,antinested
+Heibanic,r0,0.0000,0.0000,nested,nested
+Heibanic,r00,0.0000,0.0000,nested,nested
+Heibanic,r1,0.0020,0.6380,nested,antinested
+Heibanic,r2,0.0000,0.0000,nested,antinested
+Heibanic,swap,0.0000,0.0020,antinested,antinested

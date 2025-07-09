@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+superheroes,c0,0.0000,0.0000,nested,nested
+superheroes,c1,0.0000,0.0000,nested,nested
+superheroes,curveball,0.6820,0.2980,antinested,nested
+superheroes,r0,0.0000,0.0000,nested,nested
+superheroes,r00,0.0000,0.0000,nested,nested
+superheroes,r1,0.0000,0.0000,nested,nested
+superheroes,r2,0.0000,0.0000,nested,nested
+superheroes,swap,0.1120,0.2520,nested,nested

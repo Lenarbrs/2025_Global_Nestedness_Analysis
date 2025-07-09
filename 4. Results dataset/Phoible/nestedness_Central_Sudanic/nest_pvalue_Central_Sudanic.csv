@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Central_Sudanic,c0,0.0020,0.0000,nested,nested
+Central_Sudanic,c1,0.7360,0.0000,nested,nested
+Central_Sudanic,curveball,0.0240,0.8860,antinested,antinested
+Central_Sudanic,r0,0.0000,0.0000,nested,nested
+Central_Sudanic,r00,0.0000,0.0000,nested,nested
+Central_Sudanic,r1,0.0000,0.0240,nested,nested
+Central_Sudanic,r2,0.0000,0.0000,nested,antinested
+Central_Sudanic,swap,0.0000,0.9220,antinested,antinested

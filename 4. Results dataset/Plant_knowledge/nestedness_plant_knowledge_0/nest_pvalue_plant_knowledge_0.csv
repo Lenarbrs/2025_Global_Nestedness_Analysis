@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+plant_knowledge_0,c0,0.0000,0.0000,nested,nested
+plant_knowledge_0,c1,0.0000,0.0000,nested,nested
+plant_knowledge_0,curveball,0.0220,0.0380,antinested,antinested
+plant_knowledge_0,r0,0.0000,0.0000,nested,nested
+plant_knowledge_0,r00,0.0000,0.0000,nested,nested
+plant_knowledge_0,r1,0.0000,0.0000,nested,nested
+plant_knowledge_0,r2,0.0000,0.0000,nested,nested
+plant_knowledge_0,swap,0.0060,0.0040,antinested,antinested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+loire_city,c0,0.0000,0.0000,nested,nested
+loire_city,c1,0.0000,0.0000,nested,nested
+loire_city,curveball,0.0120,0.0560,antinested,nested
+loire_city,r0,0.0000,0.0000,nested,nested
+loire_city,r00,0.0000,0.0000,nested,nested
+loire_city,r1,0.0000,0.0000,nested,nested
+loire_city,r2,0.0000,0.0000,nested,antinested
+loire_city,swap,0.1600,0.0040,antinested,nested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+loire_area,c0,0.0000,0.0000,nested,nested
+loire_area,c1,0.0000,0.0000,nested,nested
+loire_area,curveball,0.0040,0.0960,antinested,antinested
+loire_area,r0,0.0000,0.0160,nested,nested
+loire_area,r00,0.0000,0.0000,nested,nested
+loire_area,r1,0.0000,0.0040,nested,antinested
+loire_area,r2,0.0000,0.0000,nested,antinested
+loire_area,swap,0.0020,0.0200,antinested,antinested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Zaparoan,c0,0.0000,0.2940,antinested,nested
+Zaparoan,c1,0.0000,0.4120,antinested,nested
+Zaparoan,curveball,0.0040,0.8020,antinested,nested
+Zaparoan,r0,0.5560,0.1040,antinested,nested
+Zaparoan,r00,0.6140,0.0440,antinested,nested
+Zaparoan,r1,0.4140,0.8640,antinested,antinested
+Zaparoan,r2,0.4220,0.0020,nested,antinested
+Zaparoan,swap,0.0000,0.9080,antinested,nested

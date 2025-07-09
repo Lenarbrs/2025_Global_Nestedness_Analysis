@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nadahup,c0,0.0340,0.7480,antinested,nested
+Nadahup,c1,0.0180,0.8980,antinested,nested
+Nadahup,curveball,0.0020,0.1540,antinested,antinested
+Nadahup,r0,0.0100,0.1120,nested,nested
+Nadahup,r00,0.0060,0.0780,nested,nested
+Nadahup,r1,0.0300,0.4180,nested,antinested
+Nadahup,r2,0.0000,0.0000,nested,antinested
+Nadahup,swap,0.0020,0.1260,antinested,antinested

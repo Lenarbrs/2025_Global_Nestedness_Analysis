@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Ta_Ne_Omotic,c0,0.0000,0.0000,nested,nested
+Ta_Ne_Omotic,c1,0.5080,0.0160,nested,nested
+Ta_Ne_Omotic,curveball,0.0000,0.2480,antinested,nested
+Ta_Ne_Omotic,r0,0.0000,0.0000,nested,nested
+Ta_Ne_Omotic,r00,0.0000,0.0000,nested,nested
+Ta_Ne_Omotic,r1,0.0000,0.1680,nested,antinested
+Ta_Ne_Omotic,r2,0.0000,0.0000,nested,antinested
+Ta_Ne_Omotic,swap,0.0000,0.2560,antinested,nested

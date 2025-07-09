@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Western_Daly,c0,0.0000,0.0200,antinested,antinested
+Western_Daly,c1,0.0000,0.0060,antinested,antinested
+Western_Daly,curveball,0.0020,0.0040,antinested,antinested
+Western_Daly,r0,0.5760,0.0920,nested,nested
+Western_Daly,r00,0.4380,0.0480,nested,nested
+Western_Daly,r1,0.5180,0.0220,antinested,antinested
+Western_Daly,r2,0.1620,0.0000,nested,antinested
+Western_Daly,swap,0.0000,0.0000,antinested,antinested

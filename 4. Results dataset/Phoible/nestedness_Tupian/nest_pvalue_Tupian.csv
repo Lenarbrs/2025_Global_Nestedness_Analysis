@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Tupian,c0,0.0000,0.0000,nested,nested
+Tupian,c1,0.1860,0.0000,nested,nested
+Tupian,curveball,0.0040,0.0680,antinested,nested
+Tupian,r0,0.0000,0.0000,nested,nested
+Tupian,r00,0.0000,0.0000,nested,nested
+Tupian,r1,0.0000,0.0000,nested,nested
+Tupian,r2,0.0000,0.0000,nested,antinested
+Tupian,swap,0.0140,0.0360,antinested,nested

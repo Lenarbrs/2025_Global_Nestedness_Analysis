@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+americanhistory,c0,0.0000,0.0000,nested,nested
+americanhistory,c1,0.0000,0.0000,nested,nested
+americanhistory,curveball,0.4880,0.5180,nested,nested
+americanhistory,r0,0.0000,0.0000,nested,nested
+americanhistory,r00,0.0000,0.0000,nested,nested
+americanhistory,r1,0.0000,0.0000,nested,nested
+americanhistory,r2,0.6780,0.0000,nested,antinested
+americanhistory,swap,0.9900,0.0100,nested,antinested

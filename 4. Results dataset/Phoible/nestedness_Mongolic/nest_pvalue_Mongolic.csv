@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Mongolic,c0,0.0000,0.0020,antinested,nested
+Mongolic,c1,0.0000,0.0540,antinested,nested
+Mongolic,curveball,0.0000,0.0000,antinested,nested
+Mongolic,r0,0.0000,0.0000,nested,nested
+Mongolic,r00,0.0000,0.0000,nested,nested
+Mongolic,r1,0.0000,0.2680,nested,antinested
+Mongolic,r2,0.0000,0.0000,nested,antinested
+Mongolic,swap,0.0000,0.0000,antinested,nested

@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Mayan,c0,0.0000,0.4060,antinested,nested
+Mayan,c1,0.0000,0.9860,antinested,antinested
+Mayan,curveball,0.0000,0.2580,antinested,antinested
+Mayan,r0,0.0000,0.0000,nested,nested
+Mayan,r00,0.0000,0.0000,nested,nested
+Mayan,r1,0.0100,0.5740,nested,antinested
+Mayan,r2,0.0000,0.0000,nested,antinested
+Mayan,swap,0.0060,0.5680,antinested,antinested

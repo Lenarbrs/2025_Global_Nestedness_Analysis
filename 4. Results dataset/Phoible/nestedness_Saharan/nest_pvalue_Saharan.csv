@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Saharan,c0,0.0000,0.3300,antinested,nested
+Saharan,c1,0.0020,0.3580,antinested,nested
+Saharan,curveball,0.0020,0.1140,antinested,nested
+Saharan,r0,0.3260,0.0020,nested,nested
+Saharan,r00,0.3780,0.0420,nested,nested
+Saharan,r1,0.5400,0.3240,nested,nested
+Saharan,r2,0.0060,0.0180,nested,antinested
+Saharan,swap,0.0020,0.1580,antinested,nested

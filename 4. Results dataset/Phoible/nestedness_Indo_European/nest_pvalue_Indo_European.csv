@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Indo_European,c0,0.0000,0.0000,nested,nested
+Indo_European,c1,0.0000,0.0000,nested,nested
+Indo_European,curveball,0.4320,0.0020,antinested,nested
+Indo_European,r0,0.0000,0.0000,nested,nested
+Indo_European,r00,0.0000,0.0000,nested,nested
+Indo_European,r1,0.0000,0.0000,nested,nested
+Indo_European,r2,0.0000,0.0000,nested,antinested
+Indo_European,swap,0.0280,0.0080,antinested,nested

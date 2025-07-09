@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Chocoan,c0,0.0080,0.0100,antinested,antinested
+Chocoan,c1,0.0060,0.0020,antinested,antinested
+Chocoan,curveball,0.0140,0.0020,antinested,antinested
+Chocoan,r0,0.0000,0.0000,nested,nested
+Chocoan,r00,0.0000,0.0120,nested,nested
+Chocoan,r1,0.0260,0.6840,nested,antinested
+Chocoan,r2,0.0000,0.0000,nested,antinested
+Chocoan,swap,0.0060,0.0060,antinested,antinested

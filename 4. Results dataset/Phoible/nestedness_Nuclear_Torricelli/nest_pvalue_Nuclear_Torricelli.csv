@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Nuclear_Torricelli,c0,0.2440,0.4220,nested,nested
+Nuclear_Torricelli,c1,0.5600,0.7720,nested,nested
+Nuclear_Torricelli,curveball,0.2780,0.7660,nested,antinested
+Nuclear_Torricelli,r0,0.0000,0.0160,nested,nested
+Nuclear_Torricelli,r00,0.0000,0.0320,nested,nested
+Nuclear_Torricelli,r1,0.0000,0.2780,nested,antinested
+Nuclear_Torricelli,r2,0.0000,0.0000,nested,antinested
+Nuclear_Torricelli,swap,0.3360,0.5340,nested,antinested

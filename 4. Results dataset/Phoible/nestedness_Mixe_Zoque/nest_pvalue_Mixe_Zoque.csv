@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Mixe_Zoque,c0,0.0340,0.3540,antinested,nested
+Mixe_Zoque,c1,0.0200,0.6400,antinested,nested
+Mixe_Zoque,curveball,0.0020,0.8180,antinested,nested
+Mixe_Zoque,r0,0.0000,0.0000,nested,nested
+Mixe_Zoque,r00,0.0000,0.0000,nested,nested
+Mixe_Zoque,r1,0.0000,0.9680,nested,nested
+Mixe_Zoque,r2,0.0000,0.0000,nested,antinested
+Mixe_Zoque,swap,0.0000,0.7080,antinested,nested

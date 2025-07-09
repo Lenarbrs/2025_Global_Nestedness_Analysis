@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+whiten_unknowns_are_present,c0,0.0000,0.0000,nested,nested
+whiten_unknowns_are_present,c1,0.1180,0.0240,nested,nested
+whiten_unknowns_are_present,curveball,0.1160,0.6540,antinested,antinested
+whiten_unknowns_are_present,r0,0.0080,0.0000,nested,nested
+whiten_unknowns_are_present,r00,0.0000,0.0000,nested,nested
+whiten_unknowns_are_present,r1,0.3500,0.9060,nested,nested
+whiten_unknowns_are_present,r2,0.4420,0.0000,nested,antinested
+whiten_unknowns_are_present,swap,0.2280,0.6860,antinested,antinested

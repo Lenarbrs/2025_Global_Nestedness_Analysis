@@ -1,0 +1,9 @@
+matrix_id,baseline,p_NODF,p_Temp,sign_NODF,sign_Temp
+Kadugli_Krongo,c0,0.5000,0.0000,antinested,nested
+Kadugli_Krongo,c1,0.1040,0.0020,antinested,nested
+Kadugli_Krongo,curveball,0.0000,0.0000,antinested,antinested
+Kadugli_Krongo,r0,0.0000,0.0000,nested,nested
+Kadugli_Krongo,r00,0.0000,0.0000,nested,nested
+Kadugli_Krongo,r1,0.7000,0.6160,nested,nested
+Kadugli_Krongo,r2,0.0020,0.0000,nested,antinested
+Kadugli_Krongo,swap,0.0000,0.0000,antinested,antinested
