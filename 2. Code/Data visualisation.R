@@ -1,5 +1,6 @@
+# Draft data visualization ----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Script for data visualisation ----
+# Script for data visualization ----
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 # Load libraries ----
@@ -8,7 +9,8 @@ library(ggtext)
 library(patchwork)
 
 # Function ----
-# 1. Function to read all CSVs and create df_obs + sim_summary for every family
+# 1. Function to read all CSVs and create df_obs + sim_summary for every family,
+#    taking p-values and significance direction from nest_pvalue_<family>.csv
 process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_temp"),
                                     alpha = 0.05) {
   measure_col <- match.arg(measure_col)
@@ -18,7 +20,6 @@ process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_t
   family_ids <- sub("^nestedness_", "", dirs)
   
   all_obs <- list()
-  all_sim <- list()
   
   for (fam in family_ids) {
     # -- Read the "real" summary
@@ -40,9 +41,8 @@ process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_t
       stringsAsFactors = FALSE
     )
     
-    # -- Compute simulated summaries for r00 and c0
+    # -- Compute simulated summaries for every baseline
     sim_summary <- df_sim %>%
-      filter(baseline %in% c("r00", "c0")) %>%
       group_by(baseline) %>%
       summarise(
         Family   = fam,
@@ -53,40 +53,42 @@ process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_t
       ) %>%
       rename(Baseline = baseline)
     
-    # -- Prepare observed data with p-values, significance and shapes
+    # -- Read p-values for this family
+    df_p <- read.csv(
+      file.path(paste0("nestedness_", fam),
+                paste0("nest_pvalue_", fam, ".csv")),
+      stringsAsFactors = FALSE
+    )
+    
+    p_col    <- if (measure_col == "stat_nodf_general") "p_NODF" else "p_Temp"
+    sign_col <- if (measure_col == "stat_nodf_general") "sign_NODF" else "sign_Temp"
+    
+    df_p2 <- df_p %>%
+      transmute(
+        Baseline         = baseline,
+        p_value          = .data[[p_col]],
+        Significant_Side = .data[[sign_col]]
+      )
+    
+    # -- Build df_obs by joining sim_summary, df_real, and p-values
     df_obs <- sim_summary %>%
       left_join(df_real, by = "Family") %>%
+      left_join(df_p2,    by = "Baseline") %>%
       mutate(
-        p_value = case_when(
-          Value < lower ~ sum(df_sim[[measure_col]] <= Value & df_sim$baseline == Baseline) /
-            sum(df_sim$baseline == Baseline),
-          Value > upper ~ sum(df_sim[[measure_col]] >= Value & df_sim$baseline == Baseline) /
-            sum(df_sim$baseline == Baseline),
-          TRUE         ~ 1 - alpha
-        ),
         significant = p_value < alpha,
-        Significant_Side = case_when(
-          !significant                                    ~ NA_character_,
-          measure_col == "stat_nodf_general" & Value > Sim_Mean ~ "Nested",
-          measure_col == "stat_nodf_general" & Value < Sim_Mean ~ "Antinested",
-          measure_col == "stat_temp"         & Value > Sim_Mean ~ "Antinested",
-          measure_col == "stat_temp"         & Value < Sim_Mean ~ "Nested",
-          TRUE                                             ~ NA_character_
-        ),
         shape = case_when(
-          Significant_Side == "Nested"     ~ "triangle",
-          Significant_Side == "Antinested" ~ "square",
-          TRUE                              ~ "circle"
+          !significant                                ~ "circle",   # not significant
+          tolower(Significant_Side) == "nested"       ~ "triangle", # nested
+          tolower(Significant_Side) == "antinested"   ~ "square",   # antinested
+          TRUE                                        ~ "circle"
         )
       )
     
     all_obs[[fam]] <- df_obs
-    all_sim[[fam]] <- sim_summary
   }
   
   # -- Combine across families
-  df_obs_all     <- bind_rows(all_obs)
-  sim_summary_all <- bind_rows(all_sim)
+  df_obs_all <- bind_rows(all_obs)
   
   # -- Order families by number of languages (ascending)
   fam_levels <- df_obs_all %>%
@@ -94,83 +96,82 @@ process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_t
     arrange(n_langs) %>%
     pull(Family)
   
-  df_obs_all$Family      <- factor(df_obs_all$Family,      levels = fam_levels)
-  sim_summary_all$Family <- factor(sim_summary_all$Family, levels = fam_levels)
+  df_obs_all$Family <- factor(df_obs_all$Family, levels = fam_levels)
+  # set baseline order explicitly
+  df_obs_all$Baseline <- factor(df_obs_all$Baseline,
+                                levels = c("r00","r0","r1","r2","c0","c1","curveball","swap")
+  )
   
-  list(df_obs     = df_obs_all,
-       sim_summary = sim_summary_all)
+  df_obs_all
 }
 
-# 2. Function to plot combined (r00 vs c0) for all families
-plot_all_families <- function(proc_res, x_label = "") {
-  df_obs      <- proc_res$df_obs
-  sim_summary <- proc_res$sim_summary
-  
+# 2. Function to plot combined for all baselines and families
+plot_all_families <- function(df_obs, x_label = "") {
   # -- Define shapes and fill colors
-  shapes <- c(triangle = 24, square = 22, circle = 21)
-  fills  <- c(triangle = "#64B5F6", square = "#FF6961", circle = "grey")
+  shapes <- c(circle = 21, triangle = 24, square = 22)
+  fills  <- c(circle = "grey", triangle = "#64B5F6", square = "#FF6961")
   
-  # -- Plot for baseline r00
-  p_r00 <- ggplot() +
-    geom_segment(
-      data = sim_summary %>% filter(Baseline == "r00"),
-      aes(x = lower, xend = upper, y = Family, yend = Family),
-      color = "#A9A9A9", size = 0.8
+  # -- Faceted plot with 2 rows: 4 panels per row
+  p <- ggplot(df_obs) +
+    # simulated intervals
+    geom_segment(aes(x = lower, xend = upper,
+                     y = Family, yend = Family),
+                 color = "#A9A9A9", size = 0.8) +
+    # observed points
+    geom_point(aes(x = Value, y = Family,
+                   shape = shape, fill = shape),
+               size = 3.5, color = "black") +
+    scale_shape_manual(
+      values = shapes,
+      name   = "Significance",
+      labels = c(circle = "Not significant",
+                 triangle = "Nested",
+                 square = "Antinested")
     ) +
-    geom_point(
-      data = df_obs %>% filter(Baseline == "r00"),
-      aes(x = Value, y = Family, shape = shape, fill = shape),
-      size = 3.5, color = "black"
+    scale_fill_manual(
+      values = fills,
+      name   = "Significance",
+      labels = c(circle = "Not significant",
+                 triangle = "Nested",
+                 square = "Antinested")
     ) +
-    scale_shape_manual(values = shapes, guide = "none") +
-    scale_fill_manual(values = fills, guide = "none") +
-    labs(x = x_label, y = NULL, title = "r00") +
+    scale_y_discrete(labels = function(fam) paste0(fam)) +
+    scale_x_continuous(limits = c(0, 100)) +
+    labs(x = x_label, y = NULL) +
+    facet_wrap(~Baseline, ncol = 4) +    # 4 panels per row, 2 rows total
     theme_minimal() +
     theme(
-      axis.text.y = element_markdown(),
-      plot.title  = element_text(hjust = 0.5)
+      axis.text.y      = element_markdown(),
+      strip.text       = element_text(face = "bold", size = 11),
+      axis.title.x     = element_text(size = 13),    
+      legend.position  = "bottom",
+      legend.title     = element_text(size = 11),  
+      legend.text      = element_text(size = 9)  
     )
   
-  # -- Plot for baseline c0
-  p_c0 <- ggplot() +
-    geom_segment(
-      data = sim_summary %>% filter(Baseline == "c0"),
-      aes(x = lower, xend = upper, y = Family, yend = Family),
-      color = "#A9A9A9", size = 0.8
-    ) +
-    geom_point(
-      data = df_obs %>% filter(Baseline == "c0"),
-      aes(x = Value, y = Family, shape = shape, fill = shape),
-      size = 3.5, color = "black"
-    ) +
-    scale_shape_manual(values = shapes, guide = "none") +
-    scale_fill_manual(values = fills, guide = "none") +
-    labs(x = x_label, title = "c0") +
-    theme_minimal() +
-    theme(
-      axis.text.y   = element_blank(),
-      axis.ticks.y  = element_blank(),
-      plot.title    = element_text(hjust = 0.5)
-    )
-  
-  # -- Combine with patchwork
-  combined_plot <- (p_r00 + p_c0) +
-    plot_layout(ncol = 2) &
-    theme(legend.position = "bottom")
-  
-  return(combined_plot)
+  p
 }
 
 # 3. Call for all families in the working directory ----
 
-# Process every nestedness_<family> folder
-res_all <- process_all_csv_results(
-  measure_col = "stat_nodf_general",  # or "stat_temp"
-  alpha       = 0.05
+df_obs_all <- process_all_csv_results(
+  measure_col = "stat_nodf_general",  # "stat_temp" or "stat_nodf_general"
+  alpha       = 0.005
 )
 
-# Plot the combined panels for r00 vs c0
-plot_all_families(
-  res_all,
-  x_label = "Generalized NODF (%)"
+final_plot <- plot_all_families(
+  df_obs_all,
+  x_label = "NODF"
+)
+
+final_plot
+
+# 4. Save the combined plot to file ----
+ggsave(
+  filename = "archeology_all_baselines_nodf_plot.png",
+  plot     = final_plot,
+  width    = 7,
+  height   = 5,
+  dpi      = 300,
+  bg       = "white"
 )
