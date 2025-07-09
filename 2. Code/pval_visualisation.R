@@ -47,3 +47,57 @@ ggsave("metric_agreement.png", plot2, width = 6, height = 6)
 # Display plots
 print(plot1)
 print(plot2)
+
+
+library(tidyverse)
+library(ggplot2)
+
+# Read the consolidated results file
+results <- read_csv("nest_pvalue_all.csv")
+
+# Create significance categories and agreement column
+results <- results %>%
+  mutate(
+    # Convert p-values to numeric (they were saved as strings with 4 decimals)
+    p_NODF = as.numeric(p_NODF),
+    p_Temp = as.numeric(p_Temp),
+    
+    # Create significance categories
+    nodf_sig = if_else(p_NODF < 0.05, "Significant", "Non-significant"),
+    temp_sig = if_else(p_Temp < 0.05, "Significant", "Non-significant"),
+    
+    # Create combined significance category
+    sig_combo = case_when(
+      nodf_sig == "Significant" & temp_sig == "Significant" ~ "Both significant",
+      nodf_sig == "Significant" & temp_sig == "Non-significant" ~ "Only NODF significant",
+      nodf_sig == "Non-significant" & temp_sig == "Significant" ~ "Only Temp significant",
+      TRUE ~ "Both non-significant"
+    ),
+    
+    # Create agreement column
+    agreement = if_else(sign_NODF == sign_Temp, "Same", "Different")
+  )
+
+# Create the plot
+plot <- results %>%
+  ggplot(aes(x = sig_combo, fill = agreement)) +
+  geom_bar(position = "dodge") +
+  scale_fill_manual(values = c("Same" = "#2ca02c", "Different" = "#d62728")) +
+  labs(title = "Agreement Between NODF and Temperature Metrics by Significance",
+       x = "Significance Combination",
+       y = "Count",
+       fill = "Agreement") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1),
+        legend.position = "top") +
+  scale_x_discrete(limits = c("Both significant", 
+                              "Only NODF significant", 
+                              "Only Temp significant", 
+                              "Both non-significant"))
+
+# Save the plot
+ggsave("significance_agreement_plot.png", plot, width = 8, height = 6)
+
+# Display the plot
+print(plot)
+
