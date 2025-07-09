@@ -727,3 +727,10 @@ superheroes,r00,0.0000,0.0000,nested,nested
 superheroes,r1,0.0000,0.0000,nested,nested
 superheroes,r2,0.0000,0.0000,nested,nested
 superheroes,swap,0.1120,0.2520,nested,nested
+compiegne,c0,0.7600,0.1240,antinested,nested
+compiegne,c1,0.7260,0.0000,antinested,nested
+compiegne,curveball,0.0000,0.0000,nested,nested
+compiegne,r0,0.4280,0.4280,antinested,nested
+compiegne,r00,0.2060,0.0300,antinested,nested
+compiegne,r1,0.4360,0.0000,antinested,nested
+compiegne,r2,0.5380,0.0000,antinested,nested
