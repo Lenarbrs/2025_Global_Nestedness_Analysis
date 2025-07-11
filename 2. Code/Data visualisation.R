@@ -11,7 +11,8 @@ library(patchwork)
 # Function ----
 # 1. Function to read all CSVs and create df_obs + sim_summary for every family,
 #    taking p-values and significance direction from nest_pvalue_<family>.csv
-process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_temp"),
+process_all_csv_results <- function(measure_col = c("stat_nodf_general", 
+                                                    "stat_temp"),
                                     alpha = 0.05) {
   measure_col <- match.arg(measure_col)
   
@@ -99,7 +100,8 @@ process_all_csv_results <- function(measure_col = c("stat_nodf_general", "stat_t
   df_obs_all$Family <- factor(df_obs_all$Family, levels = fam_levels)
   # set baseline order explicitly
   df_obs_all$Baseline <- factor(df_obs_all$Baseline,
-                                levels = c("r00","r0","r1","r2","c0","c1","curveball","swap")
+                                levels = c("r00","r0","r1","r2","c0","c1",
+                                           "curveball","swap")
   )
   
   df_obs_all
