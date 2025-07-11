@@ -35,7 +35,7 @@ compute_cor_coef <- function(matrix) {
   # Calculate Prevalence & Average inventory size
   inventory_size <- rowSums(matrix)
   prevalence <- colSums(matrix)
-  avg_inventory<- colSums(mat_example * inventory_size) / prevalence
+  avg_inventory<- colSums(matrix * inventory_size) / prevalence
   
   # Check for sufficient variance
   if (length(prevalence) < 2 || sd(prevalence) == 0 || sd(avg_inventory) == 0) {

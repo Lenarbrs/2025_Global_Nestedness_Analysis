@@ -162,3 +162,5 @@ for (bl in names(plot_list)) {
                           file = paste0("3d_plot_baseline_", gsub("[^[:alnum:]]", "_", bl), ".html"),
                           selfcontained = TRUE)
 }
+
+plot_list[[5]]
