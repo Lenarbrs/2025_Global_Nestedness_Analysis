@@ -21,3 +21,17 @@ For phoible: we have all the matrices except Atlantic Congo (big matrice, it wor
 For archeology: we have everything excpet a baseline for "compiene"
 For plant knowledge: we have everything
 For trivia: we have everything
+
+
+TO DO FIN DE STAGE :
+
+1. Clean 
+- réorganiser le git hub, enlever les exemples, les fichiers inutiles
+- faire un read me: où on a trouver les données, quel code on a utilisé pour quelle étape, quel code fait quoi, que contiennent les dossiers, les prochaines étpaes à faire, ce qui n'a pas été fait (atlantic congo, movies), dire que matrices pas sur github style movies (à vérif), dire qu'on a expliquer cmt marche shiny tt va bien, vérif pb grande matrice phoible sur humanum (?)
+
+2. Visualisation
+- plot 3D size, fill, p value, un par baseline et pour chacune des métriques
+- voir le plot agreement en fonction des baselines : pour quelle baselien il y a le moins d'agreement ?
+- télécherger en pdf le canva heatmap 
+- mettre les matrices à côté des heatmap les plus chelous
+- Faire panel de matrices quand y en a pas bcp dans un groupe : par ex panel de matrice chimpanzee, archéologie, trivia (à voir si possible)
