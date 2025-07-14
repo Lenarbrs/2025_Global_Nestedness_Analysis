@@ -1,79 +1,56 @@
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Set up your directories
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-input_dir  <- "movies" # folder containing the original csv files 
-output_dir <- "subset of movies" # folder where the sorted csvs will be saved 
-# dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)
-
-
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Function ----
+# Script to create subset of matrices
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-# Function to filter a binary matrix by top rows and columns based on density of 1s
+# This script filters binary matrices by keeping only the top 10% of rows
+# (with the most 1s), and from those, the top 70% of columns (also based on 1s).
+# This script was used for the Movie Lens and the Netflix Matrices.
+# It processes all CSV files in a given input folder and writes the filtered
+# versions to an output folder.
+# You need to change the directories for this script to work
+
+## ==== 1. Set Up Directories ====
+input_dir  <- "movies"    # Folder containing input .csv matrices
+output_dir <- "subset of movies"     # Folder to save filtered matrices
+# dir.create(output_dir, showWarnings = FALSE, recursive = TRUE)  
+
+## ==== 2. Define Filtering Function ====
 filter_binary_matrix <- function(mat, row_frac = 0.10, col_frac = 0.70) {
-  # Check that input is a binary matrix
+  # Check input validity
   if (!is.matrix(mat) || !all(mat %in% c(0, 1))) {
     stop("`mat` must be a binary matrix containing only 0s and 1s.")
   }
   
-  # ==== 1) Select top fraction of rows ====
-  
-  # Number of rows in the matrix
+  # ==== A. Filter Rows ====
   n_rows <- nrow(mat)
-  # Compute how many rows to keep (at least 1)
-  k_rows <- max(1, ceiling(n_rows * row_frac))
+  k_rows <- max(1, ceiling(n_rows * row_frac)) # keep at least 1 row
+  row_sums <- rowSums(mat)      # count 1s per row
+  top_row_idx <- order(row_sums, decreasing = TRUE)[1:k_rows]
+  sub_mat <- mat[top_row_idx, , drop = FALSE]  # subset to top rows
   
-  # Compute the sum of 1s for each row
-  row_sums <- rowSums(mat)
-  # Order rows by descending sum of 1s and take the top k_rows indices
-  top_row_idx <- order(row_sums, decreasing = TRUE)[seq_len(k_rows)]
-  
-  # Subset the matrix to keep only the top rows
-  sub_mat <- mat[top_row_idx, , drop = FALSE]
-  
-
-  # ==== 2) Select top fraction of columns within selected rows ====
-
-  # Number of columns in the subset matrix
+  # ==== B. Filter Columns ====
   n_cols <- ncol(sub_mat)
-  # Compute how many columns to keep (at least 1)
-  k_cols <- max(1, ceiling(n_cols * col_frac))
+  k_cols <- max(1, ceiling(n_cols * col_frac)) # keep at least 1 col
+  col_sums <- colSums(sub_mat) # count 1s per column
+  top_col_idx <- order(col_sums, decreasing = TRUE)[1:k_cols]
   
-  # Compute the sum of 1s for each column in the subset
-  col_sums <- colSums(sub_mat)
-  # Order columns by descending sum of 1s and take the top k_cols indices
-  top_col_idx <- order(col_sums, decreasing = TRUE)[seq_len(k_cols)]
-  
-
-  # ==== 3) Return the filtered matrix ====
-  
-  # Subset the rows and columns to produce the final filtered matrix
-  filtered_mat <- sub_mat[, top_col_idx, drop = FALSE]
+  # ==== C. Return Filtered Matrix ====
+  filtered_mat <- sub_mat[, top_col_idx, drop = FALSE]   # subset to top columns
   return(filtered_mat)
 }
 
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-# Loop over all CSV files
-#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
+## ==== 3. Loop Over CSV Files ====
 files <- list.files(input_dir, pattern = "\\.csv$", full.names = TRUE)
 
 for (f in files) {
-  # Read CSV and convert to matrix
-  df  <- read.csv(f, header = TRUE, check.names = FALSE)
+  df  <- read.csv(f, header = TRUE, check.names = FALSE)   # read matrix
   mat <- as.matrix(df)
-  
-  # Apply filtering (top 10% rows, then top 70% columns)
+  # Filter matrix using defined function
   mat_filt <- filter_binary_matrix(mat, row_frac = 0.10, col_frac = 0.70)
-  
-  # Build output filename
+  # Build output path and save CSV
   base <- tools::file_path_sans_ext(basename(f))
   out  <- file.path(output_dir, paste0(base, "_filtered.csv"))
-  
-  # Write filtered matrix to CSV
   write.csv(mat_filt, out, row.names = FALSE)
-  
+  # Progress message
   message("Processed: ", basename(f), " → ", basename(out))
 }
